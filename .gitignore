@@ -1,0 +1,23 @@
+# Config file with sensitive data (API keys, webhook URLs, team codes)
+js/config.js
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if you ever add build tools)
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
