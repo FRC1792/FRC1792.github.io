@@ -361,11 +361,13 @@
     function validateMisc(){
         const defense = $("defenseRating").value;
         const status = $("robotStatus").value;
+        const submitCode = $("submitCode").value.trim();
 
         if (state.affectedByDefense === null){ toast("⚠️ Select if team was affected by defense"); return false; }
         if (!status){ toast("⚠️ Select robot status"); return false; }
         if (!defense){ toast("⚠️ Select defense rating"); return false; }
         if (state.rank === null){ toast("⚠️ Rank this robot"); return false; }
+        if (!submitCode){ toast("⚠️ Enter submit code to authorize submission"); return false; }
         return true;
     }
 
@@ -605,7 +607,7 @@
 
             estPoints: Number(getText("estPoints")),
 
-            teamCode: _sessionData.teamCode || ""
+            submitCode: getVal("submitCode")
         };
     }
 

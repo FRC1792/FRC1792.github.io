@@ -467,6 +467,13 @@
             return false;
         }
 
+        // Submit code is required
+        const submitCode = $("submitCode").value.trim();
+        if (!submitCode) {
+            toast("⚠️ Enter submit code to authorize submission");
+            return false;
+        }
+
         return true;
     }
 
@@ -675,7 +682,7 @@
             specialFeatures: getVal("specialFeatures"),
             robotPhoto: state.photoBase64 || "",
 
-            teamCode: _sessionData.teamCode || ""
+            submitCode: getVal("submitCode")
         };
     }
 
