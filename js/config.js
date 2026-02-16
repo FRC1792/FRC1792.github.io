@@ -26,5 +26,5 @@ const SCOUTING_CONFIG = {
 
     // Secret code required to access scouting (client-side gate)
     // The real security is server-side in Apps Script (ALLOWED_CODES)
-    SECRET_CODE: "atlas"
+    SECRET_CODE: "fatlas"
 };
