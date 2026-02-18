@@ -11,7 +11,7 @@
 const SCOUTING_CONFIG = {
     // Google Apps Script URL (ends with /exec)
     // Get this from: Google Sheet → Extensions → Apps Script → Deploy → Web app
-    WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbyIVuwhIEuD4ULQEQIMLhb3C-AAKJiVwJkOK5CpaE2ifw9vUf_HmcphntK2rbmGjr_3/exec",
+    WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbwoMRCgdf3QfNphm-sWC4fyJdnOiDyhZ1C-NhQm8qFCQbc0a_eHg7L8RuV_ZjwO5qCJ/exec",
 
     // The Blue Alliance API key
     // Get this from: thebluealliance.com/account → Read API Keys
