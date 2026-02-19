@@ -45,6 +45,8 @@
         crossedBump: null,
         crossedTrench: null,
         excessivePenalties: null,
+        autoCycles: [],
+        teleopCycles: [],
     };
 
     const $ = (id) => document.getElementById(id);
@@ -89,8 +91,6 @@
         $("btnSubmit").style.display = (i === SCREENS.length - 1) ? "inline-flex" : "none";
 
         updateProgress();
-
-        if (i === 3) updateEstimate();
     }
 
     $("btnBack").addEventListener("click", ()=> showScreen(Math.max(0, state.screen - 1)));
@@ -135,9 +135,10 @@
         if ($("inactiveBlockedBumpTrench")) $("inactiveBlockedBumpTrench").checked = false;
         if ($("inactiveCollectingFuel")) $("inactiveCollectingFuel").checked = false;
 
-        $("autoFuel").value = "";
-        $("teleopFuelActive").value = "";
-        if ($("teleopFuelInactive")) $("teleopFuelInactive").value = "";
+        state.autoCycles = [];
+        state.teleopCycles = [];
+        renderCycles('auto');
+        renderCycles('teleop');
 
         state.startPos = null;
         state.climbPos = null;
@@ -167,17 +168,13 @@
         showScreen(0);
     }
 
-    function getRangeMidpoint(rangeStr) {
-        if (!rangeStr) return 0;
-        const parts = rangeStr.split("-");
-        if (parts.length !== 2) return 0;
-        const low = Number(parts[0]);
-        const high = Number(parts[1]);
-        return Math.round((low + high) / 2);
+    // Calculate total fuel points from cycles
+    function calculateCycleFuelPoints(cycles) {
+        return cycles.reduce((total, cycle) => {
+            // Points = hopper fill % * accuracy %
+            return total + (cycle.hopperFill * cycle.accuracy / 100);
+        }, 0);
     }
-
-    $("autoFuel").addEventListener("change", updateEstimate);
-    $("teleopFuelActive").addEventListener("change", updateEstimate);
 
     // Bump/Trench mutual exclusion: "None" clears the others, and vice versa
     $("autoBumpOver").addEventListener("change", function() {
@@ -229,6 +226,120 @@
         });
     }
 
+    // Cycle management functions
+    function addCycle(type) {
+        const maxCycles = 20;
+        const cycles = type === 'auto' ? state.autoCycles : state.teleopCycles;
+
+        if (cycles.length >= maxCycles) {
+            toast(`⚠️ Maximum ${maxCycles} cycles reached`);
+            return;
+        }
+
+        cycles.push({ hopperFill: 0, accuracy: 0 });
+        renderCycles(type);
+    }
+
+    function removeCycle(type, index) {
+        const cycles = type === 'auto' ? state.autoCycles : state.teleopCycles;
+        cycles.splice(index, 1);
+        renderCycles(type);
+    }
+
+    function updateCycle(type, index, field, value) {
+        const cycles = type === 'auto' ? state.autoCycles : state.teleopCycles;
+        if (cycles[index]) {
+            cycles[index][field] = Number(value);
+        }
+    }
+
+    function renderCycles(type) {
+        const cycles = type === 'auto' ? state.autoCycles : state.teleopCycles;
+        const container = type === 'auto' ? $('autoCyclesContainer') : $('teleopCyclesContainer');
+
+        if (cycles.length === 0) {
+            container.innerHTML = '<div class="note">No cycles added yet. Click "+ Add Cycle" below.</div>';
+            return;
+        }
+
+        container.innerHTML = cycles.map((cycle, index) => `
+            <div class="cycle-row" style="display: flex; gap: 12px; margin-bottom: 12px; align-items: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <div style="flex: 0 0 auto; font-weight: 600; color: var(--fg2); min-width: 70px;">
+                    Cycle ${index + 1}
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-size: 0.85rem; margin-bottom: 4px; display: block;">Hopper Fill %</label>
+                    <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value="${cycle.hopperFill}"
+                        class="cycle-hopper-input"
+                        data-type="${type}"
+                        data-index="${index}"
+                        placeholder="0-100"
+                        inputmode="numeric"
+                    />
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-size: 0.85rem; margin-bottom: 4px; display: block;">Accuracy</label>
+                    <select
+                        class="cycle-accuracy-select"
+                        data-type="${type}"
+                        data-index="${index}"
+                    >
+                        <option value="0" ${cycle.accuracy === 0 ? 'selected' : ''}>0%</option>
+                        <option value="25" ${cycle.accuracy === 25 ? 'selected' : ''}>25%</option>
+                        <option value="50" ${cycle.accuracy === 50 ? 'selected' : ''}>50%</option>
+                        <option value="75" ${cycle.accuracy === 75 ? 'selected' : ''}>75%</option>
+                        <option value="100" ${cycle.accuracy === 100 ? 'selected' : ''}>100%</option>
+                    </select>
+                </div>
+                <button
+                    type="button"
+                    class="btn small ghost"
+                    style="flex: 0 0 auto;"
+                    onclick="window.removeCycle_${type}(${index})"
+                >
+                    ✕
+                </button>
+            </div>
+        `).join('');
+
+        // Add event listeners for the inputs
+        container.querySelectorAll('.cycle-hopper-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const type = e.target.dataset.type;
+                const index = Number(e.target.dataset.index);
+                let value = Number(e.target.value);
+
+                // Clamp value between 0-100
+                if (value < 0) value = 0;
+                if (value > 100) value = 100;
+                e.target.value = value;
+
+                updateCycle(type, index, 'hopperFill', value);
+            });
+        });
+
+        container.querySelectorAll('.cycle-accuracy-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                const type = e.target.dataset.type;
+                const index = Number(e.target.dataset.index);
+                updateCycle(type, index, 'accuracy', e.target.value);
+            });
+        });
+    }
+
+    // Make remove functions available globally for onclick handlers
+    window.removeCycle_auto = (index) => removeCycle('auto', index);
+    window.removeCycle_teleop = (index) => removeCycle('teleop', index);
+
+    // Add cycle button event listeners
+    $('addAutoCycle').addEventListener('click', () => addCycle('auto'));
+    $('addTeleopCycle').addEventListener('click', () => addCycle('teleop'));
+
     document.querySelectorAll("#fieldSelector .field-position").forEach(pos=>{
         pos.addEventListener("click", ()=>{
             state.startPos = pos.dataset.value;
@@ -251,14 +362,12 @@
         ch.addEventListener("click", ()=>{
             state.autoTower = ch.dataset.value;
             renderSegments();
-            updateEstimate();
         });
     });
     document.querySelectorAll("#teleopTowerSeg .chip").forEach(ch=>{
         ch.addEventListener("click", ()=>{
             state.teleopTower = ch.dataset.value;
             renderSegments();
-            updateEstimate();
         });
     });
     document.querySelectorAll("#shotInHubSeg .chip").forEach(ch=>{
@@ -308,18 +417,6 @@
         if (level === "L3") return 30;
         return 0;
     }
-    function updateEstimate(){
-        const autoFuelMid = getRangeMidpoint($("autoFuel").value);
-        const teleopFuelActiveMid = getRangeMidpoint($("teleopFuelActive").value);
-
-        const pts =
-            autoFuelMid +
-            teleopFuelActiveMid +
-            towerPointsAuto(state.autoTower) +
-            towerPointsTeleop(state.teleopTower);
-
-        $("estPoints").textContent = pts;
-    }
 
     function validateStart(){
         const name = $("studentName").value.trim();
@@ -338,7 +435,7 @@
 
     function validateAuto(){
         if (state.startPos === null){ toast("⚠️ Select where robot starts"); return false; }
-        if (!$("autoFuel").value){ toast("⚠️ Select auto fuel range"); return false; }
+        if (state.autoCycles.length === 0){ toast("⚠️ Add at least one auto fuel cycle"); return false; }
 
         // Validate at least one fuel source checkbox is checked
         const fuelSources = $("fuelNeutralZone").checked || $("fuelOutpost").checked ||
@@ -358,7 +455,7 @@
     function validateTeleop(){
         const shuttling = $("shuttling").value;
 
-        if (!$("teleopFuelActive").value){ toast("⚠️ Select teleop fuel (active hub) range"); return false; }
+        if (state.teleopCycles.length === 0){ toast("⚠️ Add at least one teleop fuel cycle"); return false; }
 
         // Validate at least one teleop fuel source checkbox is checked
         const teleopFuelSources = $("teleopFuelNeutralZone").checked || $("teleopFuelOutpost").checked ||
@@ -589,12 +686,13 @@
             alliance: getVal("alliance"),
 
             startPos: state.startPos || "",
-            autoFuelRange: getVal("autoFuel"),
+            autoCycles: state.autoCycles,
+            autoFuelPoints: calculateCycleFuelPoints(state.autoCycles),
             autoTower: state.autoTower || "NONE",
             autoTowerPoints: towerPointsAuto(state.autoTower),
 
-            teleopFuelActiveRange: getVal("teleopFuelActive"),
-            teleopFuelInactiveRange: $("teleopFuelInactive") ? getVal("teleopFuelInactive") : "",
+            teleopCycles: state.teleopCycles,
+            teleopFuelPoints: calculateCycleFuelPoints(state.teleopCycles),
             fuelNeutralZone: $("fuelNeutralZone").checked,
             fuelOutpost: $("fuelOutpost").checked,
             fuelDepot: $("fuelDepot").checked,
@@ -629,8 +727,6 @@
             defenseRating: getVal("defenseRating"),
             rank: state.rank || "",
             comments: getVal("comments"),
-
-            estPoints: Number(getText("estPoints")),
 
             submitCode: getVal("submitCode")
         };
@@ -798,6 +894,8 @@
     }
 
     renderSegments();
+    renderCycles('auto');
+    renderCycles('teleop');
     showScreen(0);
 
     loadTeams();

@@ -22,9 +22,10 @@
 const MATCH_SHEET_NAME = "Match Scouting Data";
 const PIT_SHEET_NAME = "Pit Scouting Data";
 
-// Allowed team codes for submission (server-side security gate)
-// Add codes here for each allied team that should be able to submit data
-const ALLOWED_CODES = ["fatlas"];
+// Allowed submit codes for submission (server-side security gate)
+// IMPORTANT: These codes are stored ONLY in Apps Script, NOT in the public repo
+// Add/change codes here to authorize scouts to submit data
+const ALLOWED_SUBMIT_CODES = ["Your-Password-Here", "Another-Valid-Code"]; // <-- REPLACE with your actual codes
 
 /**
  * Handle POST requests from both scouting apps
@@ -91,18 +92,18 @@ function doPost(e) {
 
     Logger.log("Data parsed successfully");
 
-    // Validate team code
-    const teamCode = data.teamCode || "";
-    if (!teamCode || ALLOWED_CODES.indexOf(teamCode) === -1) {
-      Logger.log("REJECTED: Invalid or missing team code: " + teamCode);
+    // Validate submit code
+    const submitCode = data.submitCode || "";
+    if (!submitCode || ALLOWED_SUBMIT_CODES.indexOf(submitCode) === -1) {
+      Logger.log("REJECTED: Invalid or missing submit code: " + submitCode);
       return ContentService
         .createTextOutput(JSON.stringify({
           status: "error",
-          message: "Invalid team code"
+          message: "Invalid submit code. Ask your lead scout for the correct code."
         }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    Logger.log("Team code validated: " + teamCode);
+    Logger.log("Submit code validated: " + submitCode);
 
     // Route based on scouting type
     const scoutingType = data.scoutingType || "MATCH";
@@ -208,6 +209,21 @@ function writeToSheetMatch(data) {
   // Parse timestamp
   const timestamp = data.timestampISO ? new Date(data.timestampISO) : new Date();
 
+  // Helper function to extract cycle data
+  const getCycleData = (cycles, maxCycles) => {
+    const cycleData = [];
+    for (let i = 0; i < maxCycles; i++) {
+      if (cycles && cycles[i]) {
+        cycleData.push(cycles[i].hopperFill || 0);
+        cycleData.push(cycles[i].accuracy || 0);
+      } else {
+        cycleData.push("");  // Empty if cycle doesn't exist
+        cycleData.push("");
+      }
+    }
+    return cycleData;
+  };
+
   // Build row array (ordered to match HTML form flow)
   const row = [
     // System & General (Screen 0)
@@ -221,7 +237,7 @@ function writeToSheetMatch(data) {
 
     // Auto (Screen 1)
     data.startPos || "",                // Start Position
-    data.autoFuelRange || "",           // Auto Fuel Range
+    ...getCycleData(data.autoCycles, 20), // Auto Cycles 1-20 (Hopper %, Accuracy %)
     data.fuelNeutralZone ? "Yes" : "No", // Auto - Fuel From Neutral Zone
     data.fuelOutpost ? "Yes" : "No",    // Auto - Fuel From Outpost
     data.fuelDepot ? "Yes" : "No",      // Auto - Fuel From Depot
@@ -234,7 +250,7 @@ function writeToSheetMatch(data) {
     data.autoTowerPoints || 0,          // Auto Tower Pts
 
     // Teleop (Screen 2)
-    data.teleopFuelActiveRange || "",   // Teleop Fuel (Active) Range
+    ...getCycleData(data.teleopCycles, 20), // Teleop Cycles 1-20 (Hopper %, Accuracy %)
     data.teleopFuelNeutralZone ? "Yes" : "No", // Teleop - Fuel From Neutral Zone
     data.teleopFuelOutpost ? "Yes" : "No",     // Teleop - Fuel From Outpost
     data.teleopFuelDepot ? "Yes" : "No",       // Teleop - Fuel From Depot
@@ -258,10 +274,7 @@ function writeToSheetMatch(data) {
     data.crossedBump || "",             // Crossed Bump
     data.crossedTrench || "",           // Crossed Trench
     data.comments || "",                // Comments
-    data.rank || "",                    // Rank (1-3)
-
-    // Calculated
-    data.estPoints || 0                 // Est Points
+    data.rank || ""                     // Rank (1-3)
   ];
 
   // Append the row
@@ -397,6 +410,19 @@ function getOrCreateImageFolder() {
  * Create header row for MATCH scouting
  */
 function createHeadersMatch(sheet) {
+  // Generate cycle headers
+  const autoCycleHeaders = [];
+  for (let i = 1; i <= 20; i++) {
+    autoCycleHeaders.push(`Auto Cycle ${i} Hopper %`);
+    autoCycleHeaders.push(`Auto Cycle ${i} Accuracy %`);
+  }
+
+  const teleopCycleHeaders = [];
+  for (let i = 1; i <= 20; i++) {
+    teleopCycleHeaders.push(`Teleop Cycle ${i} Hopper %`);
+    teleopCycleHeaders.push(`Teleop Cycle ${i} Accuracy %`);
+  }
+
   const headers = [
     // System & General (Screen 0)
     "Timestamp",
@@ -408,7 +434,7 @@ function createHeadersMatch(sheet) {
     "Alliance",
     // Auto (Screen 1)
     "Start Position",
-    "Auto Fuel Range",
+    ...autoCycleHeaders,  // Auto Cycles 1-20
     "Auto - Fuel From Neutral Zone",
     "Auto - Fuel From Outpost",
     "Auto - Fuel From Depot",
@@ -420,7 +446,7 @@ function createHeadersMatch(sheet) {
     "Auto Tower",
     "Auto Tower Pts",
     // Teleop (Screen 2)
-    "Teleop Fuel (Active) Range",
+    ...teleopCycleHeaders,  // Teleop Cycles 1-20
     "Teleop - Fuel From Neutral Zone",
     "Teleop - Fuel From Outpost",
     "Teleop - Fuel From Depot",
@@ -442,9 +468,7 @@ function createHeadersMatch(sheet) {
     "Crossed Bump",
     "Crossed Trench",
     "Comments",
-    "Rank (1-3)",
-    // Calculated
-    "Est Points"
+    "Rank (1-3)"
   ];
 
   sheet.appendRow(headers);
@@ -537,7 +561,11 @@ function testMatchScouting() {
     alliance: "Blue",
     // Auto
     startPos: "1",
-    autoFuelRange: "40-60",
+    autoCycles: [
+      { hopperFill: 50, accuracy: 75 },
+      { hopperFill: 60, accuracy: 100 },
+      { hopperFill: 45, accuracy: 50 }
+    ],
     fuelNeutralZone: true,
     fuelOutpost: false,
     fuelDepot: true,
@@ -549,7 +577,12 @@ function testMatchScouting() {
     autoTower: "L1",
     autoTowerPoints: 15,
     // Teleop
-    teleopFuelActiveRange: "100-120",
+    teleopCycles: [
+      { hopperFill: 80, accuracy: 100 },
+      { hopperFill: 70, accuracy: 75 },
+      { hopperFill: 90, accuracy: 100 },
+      { hopperFill: 85, accuracy: 100 }
+    ],
     teleopFuelNeutralZone: true,
     teleopFuelOutpost: true,
     teleopFuelDepot: false,
@@ -572,8 +605,7 @@ function testMatchScouting() {
     crossedTrench: "No",
     comments: "Great robot, very consistent!",
     rank: "1",
-    // Calculated
-    estPoints: 75
+    submitCode: "1792x1259"
   };
 
   try {
