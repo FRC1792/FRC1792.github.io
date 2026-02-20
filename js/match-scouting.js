@@ -20,11 +20,11 @@
         `https://www.thebluealliance.com/api/v3/event/${encodeURIComponent(eventKey)}/teams/simple`;
 
     const SCREENS = [
-        { title: "Start",  subtitle: "Enter match info, load teams from an event, then scout." },
-        { title: "Auto",   subtitle: "Track auto fuel + auto tower." },
-        { title: "Teleop", subtitle: "Track fuel scored during active/inactive hub time and shuttling." },
-        { title: "Endgame",subtitle: "Pick tower level and hub shot during endgame." },
-        { title: "Misc/Submit", subtitle: "Ratings, rankings, comments, then submit." },
+        { title: "התחלה",  subtitle: "הכנס מידע על המשחק הקבומות ואז תעשה סקווטינג" },
+        { title: "אוטונומי",   subtitle: "תעקוב אחרי כמות כדורים ואחרי טיפוס במגדל" },
+        { title: "טלאופ", subtitle: "תעקוב אחרי קליעה במהלך השלבם הפעילים והלא פעילים של המשחק" },
+        { title: "סוף משחק",subtitle: "תבחר בשלב תיפוס והאם היה ניקוד בסוף המשחק" },
+        { title: "תסדר/תשלך", subtitle: "רמה מיקום סיכום תגובה ושליחה" },
     ];
 
     const state = {
