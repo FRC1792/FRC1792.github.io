@@ -29,11 +29,6 @@
     </div>
 </header>
 
-<div id="demoBanner" class="demo-bar" style="display:none;">
-    <span>Demo Mode — submissions and input validation are disabled</span>
-    <a href="index.html" class="demo-bar-exit">Exit Demo</a>
-</div>
-
 <main>
     <div class="card">
         <div class="hd">
@@ -57,40 +52,22 @@
             <section class="screen" data-screen="0">
                 <div class="grid">
                     <div class="col-6">
-                        <label>שם התלמיד *</label>
-                        <input id="studentName" placeholder="כמו: ליאוניד" autocomplete="name" />
+                        <label>שם הסקאוטר:</label>
+                        <input id="studentName" placeholder="כמו: ליאוניד" autocomplete="name" required/>
                     </div>
 
                     <div class="col-3">
-                        <label>הקבוצה שלך *</label>
-                        <select id="scoutTeam">
-                            <option value="" disabled selected>בחר...</option>
-                            <option value="3211">3211</option>
-                        </select>
-                    </div>
-
-                    <div class="col-3">
-                        <label>משפר משחק*</label>
-                        <input id="matchNumber" type="number" min="1" step="1" placeholder="כמו 12" inputmode="numeric" />
+                        <label>מספר המקצה: </label>
+                        <input id="matchNumber" type="number" min="1" step="1" placeholder="כמו 12" inputmode="numeric" required/>
                     </div>
 
                     <div class="col-12">
-                        <label>ברית *</label>
-                        <select id="alliance">
-                            <option value="" disabled selected>בחר...</option>
-                            <option value="Red">אדומה</option>
-                            <option value="Blue">כחולה</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <label>מספר קבוצה שאתה בודק*</label>
+                        <label>מספר הקבוצה עליה נעשה הסקאוטינג:</label>
                         <div class="autocomplete-wrapper">
-                            <input id="teamSearch" type="text" placeholder="תכתוב שם קבוצה או מספר" autocomplete="off" />
+                            <input id="teamSearch" type="text" placeholder="מספר הקבוצה" autocomplete="off" required/>
                             <div id="autocompleteResults" class="autocomplete-results"></div>
                         </div>
                         <div class="note" style="margin-top:8px">
-                            תבחר קבוצה מהלמטה (חייב להיות מהדיסטריק הנוכחי)
                         </div>
                     </div>
 
@@ -108,7 +85,7 @@
             <section class="screen" data-screen="1" style="display:none">
                 <div class="grid">
                     <div class="col-12">
-                        <label>איפה הרובוט מתחיל</label>
+                        <label>נקודת ההתחלה של הרובוט בתחילת המקצה: </label>
                         <div class="field-selector" id="fieldSelector">
                             <img src="images/field.png" alt="Field diagram" draggable="false" />
                             <div class="field-positions">
@@ -122,24 +99,15 @@
                                 <div class="field-position" data-value="3" style="left: 24%; top: 78%;">
                                     <span class="position-label">3</span>
                                 </div>
-                                <!-- Right side (Blue alliance) positions -->
-                                <div class="field-position" data-value="4" style="left: 76%; top: 22%;">
-                                    <span class="position-label">4</span>
-                                </div>
-                                <div class="field-position" data-value="5" style="left: 76%; top: 50%;">
-                                    <span class="position-label">5</span>
-                                </div>
-                                <div class="field-position" data-value="6" style="left: 76%; top: 78%;">
-                                    <span class="position-label">6</span>
-                                </div>
                             </div>
                         </div>
-                        <div class="field-selector-hint">Tap a circle to select where the robot starts</div>
+                        
+                        <div class="field-selector-hint">לחץ על העיגול כדי לבחור את נקודת ההתחלה של הרובוט</div>
                     </div>
 
                     <div class="col-12">
-                        <label>כדורים שנקלעו באוטונומי *</label>
-                        <select id="autoFuel">
+                        <label>טווח מספר הכדורים שנקלעו באוטונומי:></label>
+                        <select id="autoFuel" required>
                             <option value="" disabled selected>בחר טווח...</option>
                             <option value="0-20">0-20</option>
                             <option value="20-40">20-40</option>
@@ -151,66 +119,59 @@
                             <option value="140-160">140-160</option>
                             <option value="160-180">160-180</option>
                             <option value="180-200">180-200</option>
-                            <option value="200-220">200-220</option>
+                            <option value="200+">200+</option>
                         </select>
                     </div>
 
                     <div class="col-12">
-                        <label>מאיפה הרובוט אסף כדורים</label>
+                        <label>נקודות מהן הרובוט אסף כדורים בזמן האוטונומי:</label>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
-                                <input type="checkbox" id="fuelNeutralZone" />
-                                <span>האזור הנטרלי</span>
+                                <input type="checkbox" name="autoFuelSource" id="fuelNeutralZone" required/>
+                                <span>מהאזור הניטרלי</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="fuelOutpost" />
-                                <span>אנושי</span>
+                                <input type="checkbox" name="autoFuelSource" id="fuelOutpost" />
+                                <span>מהשחקן האנושי</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="fuelDepot" />
-                                <span>דיפוט</span>
+                                <input type="checkbox" name="autoFuelSource" id="fuelDepot" />
+                                <span>מהדיפוט</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="fuelFloor" />
-                                <span>ריצפה</span>
+                                <input type="checkbox" name="autoFuelSource" id="other" />
+                                <span>אחר</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="autoFuelSource" id="none" />
+                                <span>הרובוט לא אסף בזמן האוטונומי</span>
                             </label>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>האם הרובוט עבר מעל הרמפה או מתחת לטרנצ *</label>
+                        <label>האם הרובוט עבר דרך/מעל הנקודות הבאות בזמן האוטונומי?</label>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
-                                <input type="checkbox" id="autoBumpOver" />
+                                <input type="checkbox" name="autoPass" id="autoBumpOver" required/>
                                 <span>מעל הרמפה</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="autoTrenchUnder" />
-                                <span>מתחת לטרנצ</span>
+                                <input type="checkbox" name="autoPass" id="autoTrenchUnder" />
+                                <span>מתחת לטרנץ'</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="autoBumpTrenchNone" />
-                                <span>אף אחד</span>
+                                <input type="checkbox" name="autoPass" id="autoBumpTrenchNone" />
+                                <span>הרובוט לא עבר באף אחת מהנקודות המצוינות</span>
                             </label>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>נסיעה באוטונומי *</label>
-                        <div class="seg" id="autoShuttlingSeg">
-                            <div class="chip" data-value="Yes">כן</div>
-                            <div class="chip" data-value="No">לא</div>
-                        </div>
-                    </div>
-
-                    <div class="col-12">
-                        <label>טיפוס באוטונומי</label>
+                        <label>האם הרובוט טיפס באוטונומי?</label>
                         <div class="seg" id="autoTowerSeg">
                             <div class="chip" data-value="NONE">לא</div>
-                            <div class="chip" data-value="L1">רמה 1 (15 נק')</div>
-                        </div>
-                        <div class="note" style="margin-top:8px">
-                            באוטונומי הרובוט יכול לטפס רק עד <b>רמה 1</b>.
+                            <div class="chip" data-value="1">כן-L1</div>
                         </div>
                     </div>
                 </div>
@@ -220,8 +181,8 @@
             <section class="screen" data-screen="2" style="display:none">
                 <div class="grid">
                     <div class="col-12">
-                        <label>כמות כדורים שנקבעה במהלך השלב הפעיל *</label>
-                        <select id="teleopFuelActive">
+                        <label>טווח מספר הכדורים שנקלעו בטלאופ:</label>
+                        <select id="teleopFuelActive" required>
                             <option value="" disabled selected>בחר טווח...</option>
                             <option value="0-20">0-20</option>
                             <option value="20-40">20-40</option>
@@ -238,65 +199,37 @@
                             <option value="240-260">240-260</option>
                             <option value="260-280">260-280</option>
                             <option value="280-300">280-300</option>
-                            <option value="300-320">300-320</option>
+                            <option value="300-320">300+</option>
                         </select>
                     </div>
 
                     <div class="col-12">
-                        <label>איפה הרובוט אסף כדורים *</label>
+                        <label>נקודות מהן הרובוט אסף כדורים בזמן הטלאופ:</label>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
-                                <input type="checkbox" id="teleopFuelNeutralZone" />
-                                <span>איזור ניטרלי(אמצע המגרש איפהשהכדורים נופלים אחרי קליעה) </span>
+                                <input type="checkbox" name="teleopFuelIntake" id="fuelNeutralZone" required/>
+                                <span>מהאזור הניטרלי</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="teleopFuelOutpost" />
-                                <span>שחקן אנושי</span>
+                                <input type="checkbox" name="teleopFuelIntake" id="fuelOutpost" />
+                                <span>מהשחקן האנושי</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="teleopFuelDepot" />
-                                <span>דיפוט</span>
+                                <input type="checkbox" name="teleopFuelIntake" id="fuelDepot" />
+                                <span>מהדיפוט</span>
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" id="teleopFuelFloor" />
-                                <span>רצפה</span>
+                                <input type="checkbox" name="teleopFuelIntake" id="other" />
+                                <span>אחר</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="teleopFuelIntake" id="none" />
+                                <span>הרובוט לא אסף בזמן הטלאופ</span>
                             </label>
                         </div>
                     </div>
 
-                    <div class="col-12">
-                        <label>מה הרובוט עשה בזמן שההאב שלו לא היה פעיל</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactivePlayedDefense" />
-                                <span>שיחק הגנה</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveShuttledFuel" />
-                                <span>מסר דלק לאזור שלו</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveBlockedBumpTrench" />
-                                <span>חסם את הרמפה או את הטרנץ</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveCollectingFuel" />
-                                <span>אסף דלק</span>
-                            </label>
-                        </div>
-                    </div>
 
-                    <div class="col-12">
-                        <label>מסירה של דלק ?</label>
-                        <select id="shuttling">
-                            <option value="" disabled selected>תבחר...</option>
-                            <option value="Great">מצויין</option>
-                            <option value="Good">טוב</option>
-                            <option value="Average">סבבה</option>
-                            <option value="Bad">גרוע</option>
-                            <option value="None">לא</option>
-                        </select>
-                    </div>
                 </div>
             </section>
 
@@ -304,17 +237,18 @@
             <section class="screen" data-screen="3" style="display:none">
                 <div class="grid">
                     <div class="col-12">
-                        <label>טיפוס סוף משחק*</label>
+                        <label>לאיזה שלב הרובוט טיפס בסוף המקצה?</label>
                         <div class="seg" id="teleopTowerSeg">
-                            <div class="chip" data-value="NONE">לא</div>
-                            <div class="chip" data-value="L1">רמה 1 (10 נקודות)</div>
-                            <div class="chip" data-value="L2">רמה 2 (20 נקודות)</div>
-                            <div class="chip" data-value="L3">רמה 3 (30 נקודות)</div>
+                            <div class="chip" data-value="NONE">הרובוט לא טיפס</div>
+                            <div class="chip" data-value="NONE">הרובוט ניסה לטפס ולא הצליח</div>
+                            <div class="chip" data-value="1">L1</div>
+                            <div class="chip" data-value="2">L2</div>
+                            <div class="chip" data-value="3">L3</div>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>איפה הרובוט טיפס</label>
+                        <label>באיזה חלק של הTOWER הרובוט מטפס?</label>
                         <div class="tower-selector-zones" id="climbSelector">
                             <img src="images/tower.png" alt="Tower diagram" draggable="false" />
                             <div class="tower-zones">
@@ -331,11 +265,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="field-selector-hint">תלחץ על מקיום כדי לבחור איפה הרובוט תיפס</div>
+                        <div class="field-selector-hint">לחץ על האזור שמתאר בצורה הטובה ביותר היכן הרובוט מטפס</div>
                     </div>
 
                     <div class="col-12">
-                        <label>יריות בזמן הסוף משחק</label>
+                        <label>האם הרובוט בחר לירות במקום לטפס בשלושים השניות האחרונות של המשחק?</label>
                         <div class="seg" id="shotInHubSeg">
                             <div class="chip" data-value="Yes">כן</div>
                             <div class="chip" data-value="No">לא</div>
@@ -348,85 +282,59 @@
             <section class="screen" data-screen="4" style="display:none">
                 <div class="grid">
                     <div class="col-12">
-                        <label>האם הקבוצה הושפע בגלל הגנה?*</label>
-                        <div class="seg" id="affectedByDefenseSeg">
+                        <label>האם בוצעה מסירת כדורים מהשטח הניטרלי אל אזור הברית?</label>
+                        <div class="seg" id="feeder">
+                            <div class="chip" data-value="NONE">לא</div>
                             <div class="chip" data-value="Yes">כן</div>
-                            <div class="chip" data-value="No">לא</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label>האם הרובוט עבר דרך/מעל הנקודות הבאות בזמן הטלאופ?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="teleopPass" id="autoBumpOver" required/>
+                                <span>מעל הרמפה</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="teleopPass" id="autoTrenchUnder" />
+                                <span>מתחת לטרנץ'</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="teleopPass" id="autoBumpTrenchNone" />
+                                <span>הרובוט לא עבר באף אחת מהנקודות המצוינות</span>
+                            </label>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>מצב הרובוט</label>
-                        <select id="robotStatus">
-                            <option value="" disabled selected>תבחר...</option>
-                            <option value="OK">בסדר</option>
-                            <option value="Broke/Stopped">נשבר\הופסק</option>
-                            <option value="Brownout/Struggled">בוראווט\מתקשה</option>
-                            <option value="Disabled">נכבה</option>
-                            <option value="Tippy">קפצני</option>
-                            <option value="Radio">רדיו</option>
-                            <option value="Unknown">לא ידוע</option>
+                        <label>דירוג ההגנה שהרובוט ביצע:</label>
+                        <select id="defenseRating" required>
+                            <option value="" disabled selected>בחר...</option>
+                            <option value=1>ביצע הגנה שלא מנעה מהיריב לנקד כלל ו/או לפתח משחק תקין.</option>
+                            <option value=2>ביצע הגנה שהפריעה מעט ליריב, אך לא מנעה ממנו ניקוד משמעותי.</option>
+                            <option value=3>הפריע בצורה ניכרת לעין לביצועי היריב.</option>
+                            <option value=4>מנע נקודות ופיתוח משחק מהיריב בצורה ניכרת, נתן יתרון לברית שלו.</option>
+                            <option value=5>ביצע הגנה שמנעה מהיריב לנקד ו/או לפתח משחק לחלוטין.</option>
+                            <option value=0>הרובוט לא ביצע הגנה</option>
                         </select>
                     </div>
 
                     <div class="col-12">
-                        <label>רמת הגנה</label>
-                        <select id="defenseRating">
-                            <option value="" disabled selected>תבחר...</option>
-                            <option value="None">לא היה</option>
-                            <option value="Weak">חלש</option>
-                            <option value="Average">בסדר</option>
-                            <option value="Strong">חזק</option>
-                            <option value="Elite">מטורף</option>
+                        <label>דירוג ההגנה שהרובוט התמודד איתה:</label>
+                        <select id="againstDefenseRating" required>
+                            <option value="" disabled selected>בחר...</option>
+                            <option value=1>בוצעה על הרובוט הגנה שמנעה ממנו לנקד כלל ו/או לפתח משחק תקין.</option>
+                            <option value=2>בוצעה על הרובוט הגנה שמנעה ממנו נקודות ופיתוח משחק בצורה ניכרת, ניתן יתרון ניכר לברית השנייה</option>
+                            <option value=3>ביצועי הרובוט הופרעו בצורה ניכרת לעין על ידי ההגנה שבוצעה עליו</option>
+                            <option value=4>בוצעה על הרובוט הגנה שהפריעו לו מעט, אך לא מנעה ממנו ניקוד משמעותי</option>
+                            <option value=5>ההגנה שבוצעה על הרובוטלא מנעה ממנו לנקד כלל ו/או לפתח משחק תקין</option>
+                            <option value=0>לא בוצעה על הרובוט הגנה</option>
                         </select>
                     </div>
 
                     <div class="col-12">
-                        <label>עבר ברמפה</label>
-                        <div class="seg" id="crossedBumpSeg">
-                            <div class="chip" data-value="Yes">כן</div>
-                            <div class="chip" data-value="No">לא</div>
-                        </div>
-                    </div>
-
-                    <div class="col-12">
-                        <label>עבר מתחת לטרנץ</label>
-                        <div class="seg" id="crossedTrenchSeg">
-                            <div class="chip" data-value="Yes">כן</div>
-                            <div class="chip" data-value="No">לא</div>
-                        </div>
-
-                    </div>
-
-                   
-
-                    <div class="col-12">
-                        <label>מדיע נוסף</label>
-                        <textarea id="comments" rows="3" placeholder="כל מיני דברים מיוחדים שהרובוט עשה כמו : לא פספס בכלל שותר משולש שיחק מתחת להגנה מאד טוב "></textarea>
-                    </div>
-
-                    <div class="col-12">
-                        <label>דרג את הרובוט</label>
-                        <div class="seg" id="rankSeg">
-                            <div class="chip" data-value="1">ראשון </div>
-                            <div class="chip" data-value="2">שני </div>
-                            <div class="chip" data-value="3">שלישי </div>
-                        </div>
-                        <div class="note" style="margin-top:8px">
-                            דרג את הרובוט לפי ההשוואה לרובוטים האחרים במשחק שלך.
-                            דבר עם סקווטרים אחרים כדי להחליט על הדרגה.
-                        </div>
-
-                    <div class="col-12">
-                        <div class="counter" style="background: rgba(33,197,93,.08); border-color: rgba(33,197,93,.25);">
-                            <div class="meta">
-                                <div class="name">בערך כמה הוא השפיע במשחק (מחושב אוטומטית)</div>
-                                <div class="desc">משתמש בלוח ניקוד הרישמי של 2026</div>
-                            </div>
-                            <div class="ctl">
-                                <div class="count" id="estPoints" style="color: var(--ok); font-size: 1.4rem;">0</div>
-                            </div>
-                        </div>
+                        <label>מידע נוסף</label>
+                        <textarea id="comments" rows="3" placeholder="כל מיני דברים מיוחדים שהרובוט עשה כמו : לא פספס בכלל, שוטר משולש, שיחק תחת הגנה מאד טוב " required></textarea>
                     </div>
                 </div>
             </section>
