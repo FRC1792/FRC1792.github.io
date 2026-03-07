@@ -204,6 +204,7 @@
         state.shotOnMove = Math.max(0, (state.shotOnMove ?? 0) - 1);
         $("shotOnMoveVal").textContent = state.shotOnMove;
     });
+
     function addShotStillDot(xPct, yPct) {
         state.shotStill = (state.shotStill ?? 0) + 1;
         state.shotStillPositions.push({ x: xPct, y: yPct });
@@ -229,7 +230,8 @@
         }
         $("shotStillVal").textContent = state.shotStill === 0 ? 0 : state.shotStill;
     });
-    $("shotStillMap").addEventListener("click", (e) => {
+    $("shotStillMap").addEventListener("pointerdown", (e) => {
+        e.preventDefault();
         const rect = $("shotStillMap").getBoundingClientRect();
         const xPct = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1);
         const yPct = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
