@@ -390,10 +390,6 @@
     }
 
     function validateTeleop(){
-        if (state.passingShoot === null){ toast("⚠️ Enter passing shoot count"); return false; }
-        if (state.passIntake === null){ toast("⚠️ Enter pass (push/intake) count"); return false; }
-        if (state.shotOnMove === null){ toast("⚠️ Enter shot on move count"); return false; }
-        if (state.shotStill === null){ toast("⚠️ Enter shot still count"); return false; }
         return true;
     }
 
