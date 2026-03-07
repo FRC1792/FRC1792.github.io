@@ -696,8 +696,8 @@ input:focus, select:focus, textarea:focus{
 
 .shot-dot {
     position: absolute;
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: rgba(33,197,93,.85);
     border: 2px solid white;
