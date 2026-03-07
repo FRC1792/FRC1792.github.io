@@ -40,9 +40,12 @@
         shotInHub: null,
         affectedByDefense: null,
         excessivePenalties: null,
-        autoFuel: 0,
-        activeShift1Fuel: 0,
-        activeShift2Fuel: 0,
+        autoFuel: null,
+        passingShoot: null,
+        passIntake: null,
+        shotOnMove: null,
+        shotStill: null,
+        shotStillPositions: [],
         endgameFuel: 0,
     };
 
@@ -116,19 +119,22 @@
         $("teamSearch").value = "";
         state.selectedTeam = null;
         $("alliance").value = "";
-        $("shuttling").value = "";
         $("defenseRating").value = "";
         $("robotStatus").value = "";
-        if ($("inactivePlayedDefense")) $("inactivePlayedDefense").checked = false;
-        if ($("inactiveShuttledFuel")) $("inactiveShuttledFuel").checked = false;
-        if ($("inactiveBlockedBumpTrench")) $("inactiveBlockedBumpTrench").checked = false;
-        if ($("inactiveCollectingFuel")) $("inactiveCollectingFuel").checked = false;
 
-        state.autoFuel = 0;
-        state.activeShift1Fuel = 0;
-        state.activeShift2Fuel = 0;
+        state.autoFuel = null;
+        state.passingShoot = null;
+        state.passIntake = null;
+        state.shotOnMove = null;
+        state.shotStill = null;
+        state.shotStillPositions = [];
         state.endgameFuel = 0;
         renderFuelCounters();
+        $("passingShootVal").textContent = "--";
+        $("passIntakeVal").textContent = "--";
+        $("shotOnMoveVal").textContent = "--";
+        $("shotStillVal").textContent = "--";
+        $("shotStillMarkers").innerHTML = "";
 
         state.startPos = null;
         state.climbPos = null;
@@ -157,10 +163,7 @@
 
     // Fuel counter display keys mapped to element IDs
     const FUEL_DISPLAY = {
-        autoFuel:         "autoFuelVal",
-        activeShift1Fuel: "shift1FuelVal",
-        activeShift2Fuel: "shift2FuelVal",
-        endgameFuel:      "endgameFuelVal",
+        endgameFuel: "endgameFuelVal",
     };
 
     function renderFuelCounters() {
@@ -182,12 +185,71 @@
         });
     });
 
+    $("passingShootInc").addEventListener("click", () => {
+        state.passingShoot = (state.passingShoot ?? 0) + 1;
+        $("passingShootVal").textContent = state.passingShoot;
+    });
+    $("passingShootDec").addEventListener("click", () => {
+        state.passingShoot = Math.max(0, (state.passingShoot ?? 0) - 1);
+        $("passingShootVal").textContent = state.passingShoot;
+    });
+    $("passIntakeInc").addEventListener("click", () => {
+        state.passIntake = (state.passIntake ?? 0) + 1;
+        $("passIntakeVal").textContent = state.passIntake;
+    });
+    $("passIntakeDec").addEventListener("click", () => {
+        state.passIntake = Math.max(0, (state.passIntake ?? 0) - 1);
+        $("passIntakeVal").textContent = state.passIntake;
+    });
+    $("shotOnMoveInc").addEventListener("click", () => {
+        state.shotOnMove = (state.shotOnMove ?? 0) + 1;
+        $("shotOnMoveVal").textContent = state.shotOnMove;
+    });
+    $("shotOnMoveDec").addEventListener("click", () => {
+        state.shotOnMove = Math.max(0, (state.shotOnMove ?? 0) - 1);
+        $("shotOnMoveVal").textContent = state.shotOnMove;
+    });
+    function addShotStillDot(xPct, yPct) {
+        state.shotStill = (state.shotStill ?? 0) + 1;
+        state.shotStillPositions.push({ x: xPct, y: yPct });
+        const dot = document.createElement("div");
+        dot.className = "shot-dot";
+        dot.style.left = xPct + "%";
+        dot.style.top  = yPct + "%";
+        dot.textContent = state.shotStill;
+        $("shotStillMarkers").appendChild(dot);
+        $("shotStillVal").textContent = state.shotStill;
+    }
+    $("shotStillInc").addEventListener("click", () => {
+        state.shotStill = (state.shotStill ?? 0) + 1;
+        $("shotStillVal").textContent = state.shotStill;
+    });
+    $("shotStillDec").addEventListener("click", () => {
+        if ((state.shotStill ?? 0) === 0) return;
+        state.shotStill = state.shotStill - 1;
+        if (state.shotStillPositions.length > 0) {
+            state.shotStillPositions.pop();
+            const markers = $("shotStillMarkers");
+            if (markers.lastChild) markers.removeChild(markers.lastChild);
+        }
+        $("shotStillVal").textContent = state.shotStill === 0 ? 0 : state.shotStill;
+    });
+    $("shotStillMap").addEventListener("click", (e) => {
+        const rect = $("shotStillMap").getBoundingClientRect();
+        const xPct = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1);
+        const yPct = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
+        addShotStillDot(xPct, yPct);
+    });
+
     function renderSegments(){
         document.querySelectorAll("#fieldSelector .field-position").forEach(pos=>{
             pos.classList.toggle("active", pos.dataset.value === state.startPos);
         });
         document.querySelectorAll("#climbSelector .tower-zone").forEach(pos=>{
             pos.classList.toggle("active", pos.dataset.value === state.climbPos);
+        });
+        document.querySelectorAll("#autoFuelSeg .chip").forEach(ch=>{
+            ch.classList.toggle("active", ch.dataset.value === state.autoFuel);
         });
         document.querySelectorAll("#autoShuttlingSeg .chip").forEach(ch=>{
             ch.classList.toggle("active", ch.dataset.value === state.autoShuttling);
@@ -221,6 +283,12 @@
     document.querySelectorAll("#climbSelector .tower-zone").forEach(pos=>{
         pos.addEventListener("click", ()=>{
             state.climbPos = pos.dataset.value;
+            renderSegments();
+        });
+    });
+    document.querySelectorAll("#autoFuelSeg .chip").forEach(ch=>{
+        ch.addEventListener("click", ()=>{
+            state.autoFuel = ch.dataset.value;
             renderSegments();
         });
     });
@@ -301,20 +369,17 @@
 
     function validateAuto(){
         if (state.startPos === null){ toast("⚠️ Select where robot starts"); return false; }
+        if (state.autoFuel === null){ toast("⚠️ Select if auto fuel was scored"); return false; }
         if (state.autoShuttling === null){ toast("⚠️ Select shuttling during auto"); return false; }
         if (state.autoTower === null){ toast("⚠️ Select auto tower level"); return false; }
         return true;
     }
 
     function validateTeleop(){
-        const shuttling = $("shuttling").value;
-
-        // Validate at least one inactive activity checkbox is checked
-        const inactiveActivity = $("inactivePlayedDefense").checked || $("inactiveShuttledFuel").checked ||
-                                $("inactiveBlockedBumpTrench").checked || $("inactiveCollectingFuel").checked;
-        if (!inactiveActivity){ toast("⚠️ Select at least one inactive activity"); return false; }
-
-        if (!shuttling){ toast("⚠️ Select shuttling rating"); return false; }
+        if (state.passingShoot === null){ toast("⚠️ Enter passing shoot count"); return false; }
+        if (state.passIntake === null){ toast("⚠️ Enter pass (push/intake) count"); return false; }
+        if (state.shotOnMove === null){ toast("⚠️ Enter shot on move count"); return false; }
+        if (state.shotStill === null){ toast("⚠️ Enter shot still count"); return false; }
         return true;
     }
 
@@ -476,7 +541,7 @@
     });
 
     function renderAutocomplete(teams) {
-        autocompleteResults.innerHTML = teams.map((team, i) => `
+        autocompleteResults.innerHTML = teams.map((team) => `
         <div class="autocomplete-item" data-team="${team.number}">
             <div class="team-num">${team.number}</div>
             <div class="team-name">${team.name}</div>
@@ -515,10 +580,6 @@
             return el ? el.value : defaultVal;
         };
 
-        const getText = (id, defaultVal = "0") => {
-            const el = document.getElementById(id);
-            return el ? el.textContent : defaultVal;
-        };
 
         return {
             timestampISO: new Date().toISOString(),
@@ -534,15 +595,13 @@
             autoTower: state.autoTower || "NONE",
             autoTowerPoints: towerPointsAuto(state.autoTower),
 
-            activeShift1Fuel: state.activeShift1Fuel,
-            activeShift2Fuel: state.activeShift2Fuel,
             endgameFuel: state.endgameFuel,
+            passingShoot: state.passingShoot,
+            passIntake: state.passIntake,
+            shotOnMove: state.shotOnMove,
+            shotStill: state.shotStill,
+            shotStillPositions: state.shotStillPositions,
             autoShuttling: state.autoShuttling || "",
-            inactivePlayedDefense: $("inactivePlayedDefense") ? $("inactivePlayedDefense").checked : false,
-            inactiveShuttledFuel: $("inactiveShuttledFuel") ? $("inactiveShuttledFuel").checked : false,
-            inactiveBlockedBumpTrench: $("inactiveBlockedBumpTrench") ? $("inactiveBlockedBumpTrench").checked : false,
-            inactiveCollectingFuel: $("inactiveCollectingFuel") ? $("inactiveCollectingFuel").checked : false,
-            shuttling: getVal("shuttling"),
 
             teleopTower: state.teleopTower || "NONE",
             teleopTowerPoints: towerPointsTeleop(state.teleopTower),

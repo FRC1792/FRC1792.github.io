@@ -140,18 +140,9 @@
 
                     <div class="col-12">
                         <label>Auto Fuel Scored *</label>
-                        <div class="fuel-counter">
-                            <div class="fuel-btns">
-                                <button type="button" class="btn small ghost fuel-btn" data-key="autoFuel" data-d="-10">-10</button>
-                                <button type="button" class="btn small ghost fuel-btn" data-key="autoFuel" data-d="-5">-5</button>
-                                <button type="button" class="btn small ghost fuel-btn" data-key="autoFuel" data-d="-1">-1</button>
-                            </div>
-                            <div class="fuel-value" id="autoFuelVal">0</div>
-                            <div class="fuel-btns">
-                                <button type="button" class="btn small fuel-btn" data-key="autoFuel" data-d="1">+1</button>
-                                <button type="button" class="btn small fuel-btn" data-key="autoFuel" data-d="5">+5</button>
-                                <button type="button" class="btn small fuel-btn" data-key="autoFuel" data-d="10">+10</button>
-                            </div>
+                        <div class="seg" id="autoFuelSeg">
+                            <div class="chip" data-value="Yes">Yes</div>
+                            <div class="chip" data-value="No">No</div>
                         </div>
                     </div>
 
@@ -180,71 +171,64 @@
             <section class="screen" data-screen="2" style="display:none">
                 <div class="grid">
                     <div class="col-12">
-                        <label>Active Shift 1 Fuel *</label>
-                        <div class="fuel-counter">
-                            <div class="fuel-btns">
-                                <button type="button" class="btn small ghost fuel-btn" data-key="activeShift1Fuel" data-d="-10">-10</button>
-                                <button type="button" class="btn small ghost fuel-btn" data-key="activeShift1Fuel" data-d="-5">-5</button>
-                                <button type="button" class="btn small ghost fuel-btn" data-key="activeShift1Fuel" data-d="-1">-1</button>
+                        <label>Passing Shoots *</label>
+                        <div class="counter">
+                            <div class="meta">
+                                <span class="name">Passing Shoot</span>
                             </div>
-                            <div class="fuel-value" id="shift1FuelVal">0</div>
-                            <div class="fuel-btns">
-                                <button type="button" class="btn small fuel-btn" data-key="activeShift1Fuel" data-d="1">+1</button>
-                                <button type="button" class="btn small fuel-btn" data-key="activeShift1Fuel" data-d="5">+5</button>
-                                <button type="button" class="btn small fuel-btn" data-key="activeShift1Fuel" data-d="10">+10</button>
+                            <div class="ctl">
+                                <button type="button" class="btn small ghost" id="passingShootDec">-1</button>
+                                <div class="count" id="passingShootVal">0</div>
+                                <button type="button" class="btn small" id="passingShootInc">+1</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>Active Shift 2 Fuel *</label>
-                        <div class="fuel-counter">
-                            <div class="fuel-btns">
-                                <button type="button" class="btn small ghost fuel-btn" data-key="activeShift2Fuel" data-d="-10">-10</button>
-                                <button type="button" class="btn small ghost fuel-btn" data-key="activeShift2Fuel" data-d="-5">-5</button>
-                                <button type="button" class="btn small ghost fuel-btn" data-key="activeShift2Fuel" data-d="-1">-1</button>
+                        <label>Pass (push/intake) *</label>
+                        <div class="counter">
+                            <div class="meta">
+                                <span class="name">Pass (push/intake)</span>
                             </div>
-                            <div class="fuel-value" id="shift2FuelVal">0</div>
-                            <div class="fuel-btns">
-                                <button type="button" class="btn small fuel-btn" data-key="activeShift2Fuel" data-d="1">+1</button>
-                                <button type="button" class="btn small fuel-btn" data-key="activeShift2Fuel" data-d="5">+5</button>
-                                <button type="button" class="btn small fuel-btn" data-key="activeShift2Fuel" data-d="10">+10</button>
+                            <div class="ctl">
+                                <button type="button" class="btn small ghost" id="passIntakeDec">-1</button>
+                                <div class="count" id="passIntakeVal">0</div>
+                                <button type="button" class="btn small" id="passIntakeInc">+1</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>What robot did while hub inactive *</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactivePlayedDefense" />
-                                <span>Played defense</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveShuttledFuel" />
-                                <span>Shuttled fuel</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveBlockedBumpTrench" />
-                                <span>Blocked bump or trench</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveCollectingFuel" />
-                                <span>Collecting fuel</span>
-                            </label>
+                        <label>Shot on Move *</label>
+                        <div class="counter">
+                            <div class="meta">
+                                <span class="name">Shot on Move</span>
+                            </div>
+                            <div class="ctl">
+                                <button type="button" class="btn small ghost" id="shotOnMoveDec">-1</button>
+                                <div class="count" id="shotOnMoveVal">0</div>
+                                <button type="button" class="btn small" id="shotOnMoveInc">+1</button>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>Robot shuttling? *</label>
-                        <select id="shuttling">
-                            <option value="" disabled selected>Select...</option>
-                            <option value="Great">Great</option>
-                            <option value="Good">Good</option>
-                            <option value="Average">Average</option>
-                            <option value="Bad">Bad</option>
-                            <option value="None">None</option>
-                        </select>
+                        <label>Shot Still *</label>
+                        <div class="counter">
+                            <div class="meta">
+                                <span class="name">Shot Still</span>
+                            </div>
+                            <div class="ctl">
+                                <button type="button" class="btn small ghost" id="shotStillDec">-1</button>
+                                <div class="count" id="shotStillVal">--</div>
+                                <button type="button" class="btn small" id="shotStillInc">+1</button>
+                            </div>
+                        </div>
+                        <div class="shot-map" id="shotStillMap">
+                            <img src="images/field.png" alt="Field" draggable="false" />
+                            <div class="shot-markers" id="shotStillMarkers"></div>
+                        </div>
+                        <div class="field-selector-hint">Tap field to mark shot location</div>
                     </div>
                 </div>
             </section>
