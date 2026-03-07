@@ -205,9 +205,26 @@
         $("shotOnMoveVal").textContent = state.shotOnMove;
     });
 
+    function getShotZone(xPct, yPct) {
+        const x = parseFloat(xPct);
+        const y = parseFloat(yPct);
+        // Rows 1-7 top to bottom, boundaries derived from grid label positions
+        const row = y < 8.4 ? 1 : y < 22.3 ? 2 : y < 36.3 ? 3 : y < 51 ? 4 : y < 66.3 ? 5 : y < 81.7 ? 6 : 7;
+        // Columns: left side C1-C4 (wall→center), center region, right side C1-C4 (center→wall)
+        if (x < 10.7) return "L1." + row;
+        if (x < 21.4) return "L2." + row;
+        if (x < 32.1) return "L3." + row;
+        if (x < 42.8) return "L4." + row;
+        if (x < 57.2) return "C."  + row;
+        if (x < 67.9) return "R1." + row;
+        if (x < 78.6) return "R2." + row;
+        if (x < 89.3) return "R3." + row;
+        return "R4." + row;
+    }
+
     function addShotStillDot(xPct, yPct) {
         state.shotStill = (state.shotStill ?? 0) + 1;
-        state.shotStillPositions.push({ x: xPct, y: yPct });
+        state.shotStillPositions.push(getShotZone(xPct, yPct));
         const dot = document.createElement("div");
         dot.className = "shot-dot";
         dot.style.left = xPct + "%";
@@ -596,7 +613,7 @@
             passIntake: state.passIntake,
             shotOnMove: state.shotOnMove,
             shotStill: state.shotStill,
-            shotStillPositions: state.shotStillPositions,
+            shotStillPositions: state.shotStillPositions.join(", "),
             autoShuttling: state.autoShuttling || "",
 
             teleopTower: state.teleopTower || "NONE",

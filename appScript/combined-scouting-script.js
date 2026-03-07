@@ -232,7 +232,7 @@ function writeToSheetMatch(data) {
     data.passIntake || 0,               // Pass (Push/Intake)
     data.shotOnMove || 0,               // Shot on Move
     data.shotStill || 0,                // Shot Still
-    data.shotStillPositions ? JSON.stringify(data.shotStillPositions) : "", // Shot Still Positions
+    data.shotStillPositions || "",      // Shot Still Zones
 
     // Endgame (Screen 3)
     data.teleopTower || "NONE",         // Endgame Tower Level
@@ -400,7 +400,7 @@ function createHeadersMatch(sheet) {
     "Pass (Push/Intake)",
     "Shot on Move",
     "Shot Still",
-    "Shot Still Positions",
+    "Shot Still Zones (L#.row / R#.row / C.row)",
     // Endgame (Screen 3)
     "Endgame Tower Level",
     "Endgame Tower Pts",
