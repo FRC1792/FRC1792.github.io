@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add js/match-scouting.js appScript/combined-scouting-script.js)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
