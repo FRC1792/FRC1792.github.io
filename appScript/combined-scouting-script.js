@@ -228,13 +228,11 @@ function writeToSheetMatch(data) {
     data.autoTowerPoints || 0,          // Auto Tower Pts
 
     // Teleop (Screen 2)
-    data.activeShift1Fuel || 0,         // Active Shift 1 Fuel
-    data.activeShift2Fuel || 0,         // Active Shift 2 Fuel
-    data.inactivePlayedDefense ? "Yes" : "No", // Inactive - Played Defense
-    data.inactiveShuttledFuel ? "Yes" : "No",  // Inactive - Shuttled Fuel
-    data.inactiveBlockedBumpTrench ? "Yes" : "No", // Inactive - Blocked Bump/Trench
-    data.inactiveCollectingFuel ? "Yes" : "No", // Inactive - Collecting Fuel
-    data.shuttling || "",               // Shuttling
+    data.passingShoot || 0,             // Passing Shoots
+    data.passIntake || 0,               // Pass (Push/Intake)
+    data.shotOnMove || 0,               // Shot on Move
+    data.shotStill || 0,                // Shot Still
+    data.shotStillPositions ? JSON.stringify(data.shotStillPositions) : "", // Shot Still Positions
 
     // Endgame (Screen 3)
     data.teleopTower || "NONE",         // Endgame Tower Level
@@ -398,13 +396,11 @@ function createHeadersMatch(sheet) {
     "Auto Tower",
     "Auto Tower Pts",
     // Teleop (Screen 2)
-    "Active Shift 1 Fuel",
-    "Active Shift 2 Fuel",
-    "Inactive - Played Defense",
-    "Inactive - Shuttled Fuel",
-    "Inactive - Blocked Bump/Trench",
-    "Inactive - Collecting Fuel",
-    "Shuttling",
+    "Passing Shoots",
+    "Pass (Push/Intake)",
+    "Shot on Move",
+    "Shot Still",
+    "Shot Still Positions",
     // Endgame (Screen 3)
     "Endgame Tower Level",
     "Endgame Tower Pts",
@@ -507,18 +503,16 @@ function testMatchScouting() {
     alliance: "Blue",
     // Auto
     startPos: "1",
-    autoFuel: 12,
+    autoFuel: "Yes",
     autoShuttling: "Yes",
     autoTower: "L1",
     autoTowerPoints: 15,
     // Teleop
-    activeShift1Fuel: 25,
-    activeShift2Fuel: 15,
-    inactivePlayedDefense: true,
-    inactiveShuttledFuel: false,
-    inactiveBlockedBumpTrench: true,
-    inactiveCollectingFuel: false,
-    shuttling: "Great",
+    passingShoot: 3,
+    passIntake: 2,
+    shotOnMove: 5,
+    shotStill: 8,
+    shotStillPositions: [{x: "45.0", y: "30.0"}, {x: "55.0", y: "35.0"}],
     // Endgame
     teleopTower: "L2",
     teleopTowerPoints: 20,
