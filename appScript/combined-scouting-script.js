@@ -222,7 +222,7 @@ function writeToSheetMatch(data) {
 
     // Auto (Screen 1)
     data.startPos || "",                // Start Position
-    data.autoFuel || 0,                 // Auto Fuel Scored
+    data.autoFuel || "",                // Auto Fuel Scored
     data.autoShuttling || "",           // Auto Shuttling
     data.autoTower || "NONE",           // Auto Tower
     data.autoTowerPoints || 0,          // Auto Tower Pts
@@ -241,7 +241,6 @@ function writeToSheetMatch(data) {
     data.teleopTowerPoints || 0,        // Endgame Tower Pts
     data.climbPos || "",                // Climb Position
     data.shotInHub || "",               // Shot In Hub
-    data.endgameFuel || 0,             // Endgame Fuel Scored
 
     // Misc (Screen 4)
     data.affectedByDefense || "",       // Affected By Defense
@@ -411,7 +410,6 @@ function createHeadersMatch(sheet) {
     "Endgame Tower Pts",
     "Climb Position",
     "Shot In Hub",
-    "Endgame Fuel Scored",
     // Misc (Screen 4)
     "Affected By Defense",
     "Robot Status",
@@ -526,7 +524,6 @@ function testMatchScouting() {
     teleopTowerPoints: 20,
     climbPos: "Center",
     shotInHub: "Yes",
-    endgameFuel: 5,
     // Misc
     affectedByDefense: "No",
     robotStatus: "OK",

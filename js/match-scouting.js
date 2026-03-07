@@ -46,7 +46,6 @@
         shotOnMove: null,
         shotStill: null,
         shotStillPositions: [],
-        endgameFuel: 0,
     };
 
     const $ = (id) => document.getElementById(id);
@@ -128,8 +127,6 @@
         state.shotOnMove = null;
         state.shotStill = null;
         state.shotStillPositions = [];
-        state.endgameFuel = 0;
-        renderFuelCounters();
         $("passingShootVal").textContent = "--";
         $("passIntakeVal").textContent = "--";
         $("shotOnMoveVal").textContent = "--";
@@ -162,9 +159,7 @@
     }
 
     // Fuel counter display keys mapped to element IDs
-    const FUEL_DISPLAY = {
-        endgameFuel: "endgameFuelVal",
-    };
+    const FUEL_DISPLAY = {};
 
     function renderFuelCounters() {
         for (const [key, elId] of Object.entries(FUEL_DISPLAY)) {
@@ -595,7 +590,6 @@
             autoTower: state.autoTower || "NONE",
             autoTowerPoints: towerPointsAuto(state.autoTower),
 
-            endgameFuel: state.endgameFuel,
             passingShoot: state.passingShoot,
             passIntake: state.passIntake,
             shotOnMove: state.shotOnMove,
