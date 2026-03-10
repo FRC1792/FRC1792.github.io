@@ -104,6 +104,7 @@
         state.selectedTeamName = "";
 
         $("drivetrain").value = "";
+        $("motorType").value = "";
         $("width").value = "";
         $("length").value = "";
         $("height").value = "";
@@ -432,7 +433,10 @@
         const height = $("height").value.trim();
         const specialFeatures = $("specialFeatures").value.trim();
 
+        const motorType = $("motorType").value;
+
         if (!drivetrain){ toast("⚠️ Select drivetrain type"); return false; }
+        if (!motorType){ toast("⚠️ Select motor type"); return false; }
 
         // Robot dimensions are required
         if (!width || !length || !height) {
@@ -665,6 +669,7 @@
             teamName: state.selectedTeamName,
 
             drivetrain: getVal("drivetrain"),
+            motorType: getVal("motorType"),
             width: getVal("width"),
             length: getVal("length"),
             height: getVal("height"),

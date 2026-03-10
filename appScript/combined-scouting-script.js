@@ -290,6 +290,7 @@ function writeToSheetPit(data) {
 
     // Robot Design
     data.drivetrain || "",              // Drivetrain Type
+    data.motorType || "",               // Motor Type
     data.width || "",                   // Width (inches)
     data.length || "",                  // Length (inches)
     data.height || "",                  // Height (inches)
@@ -448,6 +449,7 @@ function createHeadersPit(sheet) {
 
     // Robot Design
     "Drivetrain Type",
+    "Motor Type",
     "Width (in)",
     "Length (in)",
     "Height (in)",

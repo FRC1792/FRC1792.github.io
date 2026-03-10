@@ -233,6 +233,7 @@
         $("shotStillMarkers").appendChild(dot);
         $("shotStillVal").textContent = state.shotStill;
     }
+
     $("shotStillInc").addEventListener("click", () => {
         state.shotStill = (state.shotStill ?? 0) + 1;
         $("shotStillVal").textContent = state.shotStill;
