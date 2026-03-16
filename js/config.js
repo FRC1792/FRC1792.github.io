@@ -19,7 +19,7 @@ const SCOUTING_CONFIG = {
 
     // Event code (find at thebluealliance.com — last part of event URL)
     // Example: "2026wiapp" = 2026 Appleton District
-    EVENT_KEY: "2026wiapp",
+    EVENT_KEY: "2026wiply",
 
     // Set to false to disable team loading from TBA
     ENABLE_TEAM_LOADING: true,
