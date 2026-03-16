@@ -514,7 +514,7 @@ function testMatchScouting() {
     passIntake: 2,
     shotOnMove: 5,
     shotStill: 8,
-    shotStillPositions: [{x: "45.0", y: "30.0"}, {x: "55.0", y: "35.0"}],
+    shotStillPositions: "L2.3, C.5",
     // Endgame
     teleopTower: "L2",
     teleopTowerPoints: 20,

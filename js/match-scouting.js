@@ -208,23 +208,26 @@
     function getShotZone(xPct, yPct) {
         const x = parseFloat(xPct);
         const y = parseFloat(yPct);
-        // Rows 1-7 top to bottom, boundaries derived from grid label positions
-        const row = y < 8.4 ? 1 : y < 22.3 ? 2 : y < 36.3 ? 3 : y < 51 ? 4 : y < 66.3 ? 5 : y < 81.7 ? 6 : 7;
-        // Columns: left side C1-C4 (wall→center), center region, right side C1-C4 (center→wall)
-        if (x < 10.7) return "L1." + row;
-        if (x < 21.4) return "L2." + row;
-        if (x < 32.1) return "L3." + row;
-        if (x < 42.8) return "L4." + row;
-        if (x < 57.2) return "C."  + row;
-        if (x < 67.9) return "R1." + row;
-        if (x < 78.6) return "R2." + row;
-        if (x < 89.3) return "R3." + row;
-        return "R4." + row;
+        // Rows 1-7 top to bottom (left-side convention), boundaries derived from grid label positions
+        const row = y < 18 ? 1 : y < 31 ? 2 : y < 44 ? 3 : y < 58 ? 4 : y < 71 ? 5 : y < 83.5 ? 6 : 7;
+        // Left side: L1 (wall) → L4 (center-adjacent), rows 1-7 top→bottom
+        if (x < 8.5)  return "L1." + row;
+        if (x < 14.8) return "L2." + row;
+        if (x < 21)   return "L3." + row;
+        if (x < 27)   return "L4." + row;
+        // Right side: field image labels columns 4→1 (left→right) and rows 7→1 (top→bottom)
+        const rightRow = 8 - row;
+        if (x < 79) return "R4." + rightRow;
+        if (x < 85) return "R3." + rightRow;
+        if (x < 91) return "R2." + rightRow;
+        return "R1." + rightRow;
     }
 
     function addShotStillDot(xPct, yPct) {
         state.shotStill = (state.shotStill ?? 0) + 1;
-        state.shotStillPositions.push(getShotZone(xPct, yPct));
+        const zone = getShotZone(xPct, yPct);
+        console.log(`Shot #${state.shotStill}: x=${xPct}%, y=${yPct}% → zone=${zone}`);
+        state.shotStillPositions.push(zone);
         const dot = document.createElement("div");
         dot.className = "shot-dot";
         dot.style.left = xPct + "%";
@@ -250,9 +253,13 @@
     });
     $("shotStillMap").addEventListener("pointerdown", (e) => {
         e.preventDefault();
+        const divRect = $("shotStillMap").getBoundingClientRect();
+        const imgRect = $("shotStillMap").querySelector("img").getBoundingClientRect();
+        console.log(`div: w=${divRect.width.toFixed(0)}px h=${divRect.height.toFixed(0)}px | img: w=${imgRect.width.toFixed(0)}px h=${imgRect.height.toFixed(0)}px`);
         const rect = $("shotStillMap").getBoundingClientRect();
         const xPct = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1);
         const yPct = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
+        if (parseFloat(xPct) >= 27 && parseFloat(xPct) < 73) return;
         addShotStillDot(xPct, yPct);
     });
 
