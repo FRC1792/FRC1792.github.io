@@ -32,6 +32,7 @@
         rank: null,
         selectedTeam: null,
         loadedTeams: [],
+        startPos: null,
         climbPos: null,
         autoShuttling: null,
         autoTower: null,
@@ -132,6 +133,8 @@
         $("shotStillVal").textContent = "--";
         $("shotStillMarkers").innerHTML = "";
 
+        state.startPos = null;
+        document.querySelectorAll("#fieldSelector .field-position").forEach(p => p.classList.remove("active"));
         state.climbPos = null;
         const climbWrap = $("climbSelectorWrapper");
         if (climbWrap) climbWrap.style.display = "none";
@@ -262,6 +265,9 @@
     });
 
     function renderSegments(){
+        document.querySelectorAll("#fieldSelector .field-position").forEach(pos=>{
+            pos.classList.toggle("active", pos.dataset.value === state.startPos);
+        });
         document.querySelectorAll("#climbSelector .tower-zone").forEach(pos=>{
             pos.classList.toggle("active", pos.dataset.value === state.climbPos);
         });
@@ -288,6 +294,12 @@
         });
     }
 
+    document.querySelectorAll("#fieldSelector .field-position").forEach(pos=>{
+        pos.addEventListener("click", ()=>{
+            state.startPos = pos.dataset.value;
+            renderSegments();
+        });
+    });
     document.querySelectorAll("#climbSelector .tower-zone").forEach(pos=>{
         pos.addEventListener("click", ()=>{
             state.climbPos = pos.dataset.value;
@@ -373,6 +385,7 @@
     }
 
     function validateAuto(){
+        if (state.startPos === null){ toast("⚠️ Select where robot starts"); return false; }
         if (state.autoFuel === null){ toast("⚠️ Select if auto fuel was scored"); return false; }
         if (state.autoShuttling === null){ toast("⚠️ Select shuttling during auto"); return false; }
         if (state.autoTower === null){ toast("⚠️ Select auto tower level"); return false; }
@@ -590,6 +603,7 @@
             teamNumber: Number(state.selectedTeam || 0),
             alliance: getVal("alliance"),
 
+            startPos: state.startPos || "",
             autoFuel: state.autoFuel,
             autoTower: state.autoTower || "NONE",
             autoTowerPoints: towerPointsAuto(state.autoTower),

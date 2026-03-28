@@ -109,6 +109,36 @@
             <section class="screen" data-screen="1" style="display:none">
                 <div class="grid">
                     <div class="col-12">
+                        <label>Where robot starts *</label>
+                        <div class="field-selector" id="fieldSelector">
+                            <img src="../images/field.png" alt="Field diagram" draggable="false" />
+                            <div class="field-positions">
+                                <!-- Left side (Red alliance) positions -->
+                                <div class="field-position" data-value="1" style="left: 24%; top: 22%;">
+                                    <span class="position-label">1</span>
+                                </div>
+                                <div class="field-position" data-value="2" style="left: 24%; top: 50%;">
+                                    <span class="position-label">2</span>
+                                </div>
+                                <div class="field-position" data-value="3" style="left: 24%; top: 78%;">
+                                    <span class="position-label">3</span>
+                                </div>
+                                <!-- Right side (Blue alliance) positions -->
+                                <div class="field-position" data-value="4" style="left: 76%; top: 22%;">
+                                    <span class="position-label">4</span>
+                                </div>
+                                <div class="field-position" data-value="5" style="left: 76%; top: 50%;">
+                                    <span class="position-label">5</span>
+                                </div>
+                                <div class="field-position" data-value="6" style="left: 76%; top: 78%;">
+                                    <span class="position-label">6</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-selector-hint">Tap a circle to select where the robot starts</div>
+                    </div>
+
+                    <div class="col-12">
                         <label>Auto Fuel Scored *</label>
                         <div class="seg" id="autoFuelSeg">
                             <div class="chip" data-value="Yes">Yes</div>
