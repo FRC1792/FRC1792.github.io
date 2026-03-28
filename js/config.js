@@ -18,7 +18,7 @@ const SCOUTING_CONFIG = {
     TBA_API_KEY: "QbQkb0gqMlzea1xJM9Mo81lCIEFeHcHduBAj4X2M2SJZI7d7rhxXpHepMhseNOdZ",
 
     // Event code (find at thebluealliance.com — last part of event URL)
-    // Example: "2026wiapp" = 2026 Appleton District
+    // Example: "2026wisev" = 2026 Appleton District
     EVENT_KEY: "2026wiapp",
 
     // Set to false to disable team loading from TBA

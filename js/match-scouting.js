@@ -32,7 +32,6 @@
         rank: null,
         selectedTeam: null,
         loadedTeams: [],
-        startPos: null,
         climbPos: null,
         autoShuttling: null,
         autoTower: null,
@@ -133,7 +132,6 @@
         $("shotStillVal").textContent = "--";
         $("shotStillMarkers").innerHTML = "";
 
-        state.startPos = null;
         state.climbPos = null;
         const climbWrap = $("climbSelectorWrapper");
         if (climbWrap) climbWrap.style.display = "none";
@@ -264,9 +262,6 @@
     });
 
     function renderSegments(){
-        document.querySelectorAll("#fieldSelector .field-position").forEach(pos=>{
-            pos.classList.toggle("active", pos.dataset.value === state.startPos);
-        });
         document.querySelectorAll("#climbSelector .tower-zone").forEach(pos=>{
             pos.classList.toggle("active", pos.dataset.value === state.climbPos);
         });
@@ -285,9 +280,6 @@
         document.querySelectorAll("#shotInHubSeg .chip").forEach(ch=>{
             ch.classList.toggle("active", ch.dataset.value === state.shotInHub);
         });
-        document.querySelectorAll("#affectedByDefenseSeg .chip").forEach(ch=>{
-            ch.classList.toggle("active", ch.dataset.value === state.affectedByDefense);
-        });
         document.querySelectorAll("#excessivePenaltiesSeg .chip").forEach(ch=>{
             ch.classList.toggle("active", ch.dataset.value === state.excessivePenalties);
         });
@@ -296,12 +288,6 @@
         });
     }
 
-    document.querySelectorAll("#fieldSelector .field-position").forEach(pos=>{
-        pos.addEventListener("click", ()=>{
-            state.startPos = pos.dataset.value;
-            renderSegments();
-        });
-    });
     document.querySelectorAll("#climbSelector .tower-zone").forEach(pos=>{
         pos.addEventListener("click", ()=>{
             state.climbPos = pos.dataset.value;
@@ -344,11 +330,8 @@
             renderSegments();
         });
     });
-    document.querySelectorAll("#affectedByDefenseSeg .chip").forEach(ch=>{
-        ch.addEventListener("click", ()=>{
-            state.affectedByDefense = ch.dataset.value;
-            renderSegments();
-        });
+    $("affectedByDefenseSeg").addEventListener("change", e=>{
+        state.affectedByDefense = e.target.value;
     });
     document.querySelectorAll("#excessivePenaltiesSeg .chip").forEach(ch=>{
         ch.addEventListener("click", ()=>{
@@ -390,7 +373,6 @@
     }
 
     function validateAuto(){
-        if (state.startPos === null){ toast("⚠️ Select where robot starts"); return false; }
         if (state.autoFuel === null){ toast("⚠️ Select if auto fuel was scored"); return false; }
         if (state.autoShuttling === null){ toast("⚠️ Select shuttling during auto"); return false; }
         if (state.autoTower === null){ toast("⚠️ Select auto tower level"); return false; }
@@ -412,7 +394,7 @@
         const status = $("robotStatus").value;
         const submitCode = $("submitCode").value.trim();
 
-        if (state.affectedByDefense === null){ toast("⚠️ Select if team was affected by defense"); return false; }
+        if (!state.affectedByDefense){ toast("⚠️ Select if team was affected by defense"); return false; }
         if (!status){ toast("⚠️ Select robot status"); return false; }
         if (!defense){ toast("⚠️ Select defense rating"); return false; }
         if (state.rank === null){ toast("⚠️ Rank this robot"); return false; }
@@ -608,7 +590,6 @@
             teamNumber: Number(state.selectedTeam || 0),
             alliance: getVal("alliance"),
 
-            startPos: state.startPos || "",
             autoFuel: state.autoFuel,
             autoTower: state.autoTower || "NONE",
             autoTowerPoints: towerPointsAuto(state.autoTower),
