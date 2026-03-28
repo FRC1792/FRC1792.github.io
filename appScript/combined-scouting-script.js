@@ -221,6 +221,7 @@ function writeToSheetMatch(data) {
     data.alliance || "",                // Alliance
 
     // Auto (Screen 1)
+    data.startPos || "",                // Start Position
     data.autoFuel || "",                // Auto Fuel Scored
     data.autoShuttling || "",           // Auto Shuttling
     data.autoTower || "NONE",           // Auto Tower
@@ -390,6 +391,7 @@ function createHeadersMatch(sheet) {
     "Team #",
     "Alliance",
     // Auto (Screen 1)
+    "Start Position",
     "Auto Fuel Scored",
     "Auto Shuttling",
     "Auto Tower",
