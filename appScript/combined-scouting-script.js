@@ -220,6 +220,7 @@ function writeToSheetMatch(data) {
 
     // Auto (Screen 1)
     data.startPos || "",                // Start Position
+<<<<<<< HEAD
     data.autoFuelRange || "",           // Auto Fuel Range
     data.fuelNeutralZone ? "Yes" : "No", // Auto - Fuel From Neutral Zone
     data.fuelOutpost ? "Yes" : "No",    // Auto - Fuel From Outpost
@@ -228,11 +229,15 @@ function writeToSheetMatch(data) {
     data.autoBumpOver ? "Yes" : "No",   // Over Bump
     data.autoTrenchUnder ? "Yes" : "No", // Under Trench
     data.autoBumpTrenchNone ? "Yes" : "No", // Bump/Trench None
+=======
+    data.autoFuel || "",                // Auto Fuel Scored
+>>>>>>> host
     data.autoShuttling || "",           // Auto Shuttling
     data.autoTower || "NONE",           // Auto Tower
     data.autoTowerPoints || 0,          // Auto Tower Pts
 
     // Teleop (Screen 2)
+<<<<<<< HEAD
     data.teleopFuelActiveRange || "",   // Teleop Fuel (Active) Range
     data.teleopFuelNeutralZone ? "Yes" : "No", // Teleop - Fuel From Neutral Zone
     data.teleopFuelOutpost ? "Yes" : "No",     // Teleop - Fuel From Outpost
@@ -243,6 +248,13 @@ function writeToSheetMatch(data) {
     data.inactiveBlockedBumpTrench ? "Yes" : "No", // Inactive - Blocked Bump/Trench
     data.inactiveCollectingFuel ? "Yes" : "No", // Inactive - Collecting Fuel
     data.shuttling || "",               // Shuttling
+=======
+    data.passingShoot || 0,             // Passing Shoots
+    data.passIntake || 0,               // Pass (Push/Intake)
+    data.shotOnMove || 0,               // Shot on Move
+    data.shotStill || 0,                // Shot Still
+    data.shotStillPositions || "",      // Shot Still Zones
+>>>>>>> host
 
     // Endgame (Screen 3)
     data.teleopTower || "NONE",         // Endgame Tower Level
@@ -419,6 +431,7 @@ function createHeadersMatch(sheet) {
     "Auto Tower",
     "Auto Tower Pts",
     // Teleop (Screen 2)
+<<<<<<< HEAD
     "Teleop Fuel (Active) Range",
     "Teleop - Fuel From Neutral Zone",
     "Teleop - Fuel From Outpost",
@@ -429,6 +442,13 @@ function createHeadersMatch(sheet) {
     "Inactive - Blocked Bump/Trench",
     "Inactive - Collecting Fuel",
     "Shuttling",
+=======
+    "Passing Shoots",
+    "Pass (Push/Intake)",
+    "Shot on Move",
+    "Shot Still",
+    "Shot Still Zones (L#.row / R#.row / C.row)",
+>>>>>>> host
     // Endgame (Screen 3)
     "Endgame Tower Level",
     "Endgame Tower Pts",
@@ -536,6 +556,7 @@ function testMatchScouting() {
     alliance: "Blue",
     // Auto
     startPos: "1",
+<<<<<<< HEAD
     autoFuelRange: "40-60",
     fuelNeutralZone: true,
     fuelOutpost: false,
@@ -544,10 +565,14 @@ function testMatchScouting() {
     autoBumpOver: true,
     autoTrenchUnder: false,
     autoBumpTrenchNone: false,
+=======
+    autoFuel: "Yes",
+>>>>>>> host
     autoShuttling: "Yes",
     autoTower: "L1",
     autoTowerPoints: 15,
     // Teleop
+<<<<<<< HEAD
     teleopFuelActiveRange: "100-120",
     teleopFuelNeutralZone: true,
     teleopFuelOutpost: true,
@@ -558,6 +583,13 @@ function testMatchScouting() {
     inactiveBlockedBumpTrench: true,
     inactiveCollectingFuel: false,
     shuttling: "Great",
+=======
+    passingShoot: 3,
+    passIntake: 2,
+    shotOnMove: 5,
+    shotStill: 8,
+    shotStillPositions: "L2.3, C.5",
+>>>>>>> host
     // Endgame
     teleopTower: "L2",
     teleopTowerPoints: 20,

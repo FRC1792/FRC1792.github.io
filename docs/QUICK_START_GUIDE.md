@@ -45,17 +45,15 @@ const SCOUTING_CONFIG = {
 const ALLOWED_CODES = ["rtr1792"];  // add allied team codes if needed
 ```
 
-After editing Apps Script, **redeploy** (Deploy → New deployment).
-
-**Also update:**
-- Team numbers in `match-scouting.html` (search for `<option value=`)
+After editing Apps Script, make a new version of the depoloyment 
+1. Head over to the appscript extensions
+2. Click manage deployements 
+3. Click on the edit icon on the top right 
+4. Click on the version button and the new version option
 
 ## Step 4: Deploy to GitHub Pages
 
-1. Push changes to GitHub
-2. Go to repo **Settings → Pages**
-3. Set source to **main** branch, folder **/**
-4. Save and wait a few minutes
+Refer to the github pages official documentation on how to set this up
 
 ## Step 5: Test
 

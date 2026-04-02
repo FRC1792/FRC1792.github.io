@@ -434,6 +434,8 @@
         const height = $("height").value.trim();
         const specialFeatures = $("specialFeatures").value.trim();
 
+        const motorType = $("motorType").value;
+
         if (!drivetrain){ toast("⚠️ Select drivetrain type"); return false; }
         if (!motorType){ toast("⚠️ Select motor type"); return false; }
 

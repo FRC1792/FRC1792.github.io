@@ -4,18 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Match Scouting ● FRC 1792</title>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 <header>
     <div class="topbar">
         <div class="brand">
-            <a href="index.html" class="logo-link">
-                <img src="images/logo.svg" alt="FRC 1792 Logo" class="header-logo" onerror="this.onerror=null; this.src='images/favicon.ico';">
+            <a href="../index.html" class="logo-link">
+                <img src="../images/logo.svg" alt="FRC 1792 Logo" class="header-logo" onerror="this.onerror=null; this.src='../images/favicon.ico';">
             </a>
             <div class="brand-text">
                 <div class="t1">1792 Match Scouting ● 2026 REBUILT</div>
@@ -31,7 +31,7 @@
 
 <div id="demoBanner" class="demo-bar" style="display:none;">
     <span>Demo Mode — submissions and input validation are disabled</span>
-    <a href="index.html" class="demo-bar-exit">Exit Demo</a>
+    <a href="../index.html" class="demo-bar-exit">Exit Demo</a>
 </div>
 
 <main>
@@ -48,7 +48,7 @@
                 <h2 id="screenTitle">Start</h2>
                 <p id="screenSubtitle">Enter match info, load teams from an event, then scout.</p>
             </div>
-            <button class="btn small ghost" id="btnHome" onclick="window.location.href='index.html'">← Home</button>
+            <button class="btn small ghost" id="btnHome" onclick="window.location.href='../index.html'">← Home</button>
             <button class="btn small ghost" id="btnReset">Reset</button>
         </div>
 
@@ -91,7 +91,7 @@
                             <div id="autocompleteResults" class="autocomplete-results"></div>
                         </div>
                         <div class="note" style="margin-top:8px">
-                            Select a team from the dropdown (must be from the 2026 Appleton District Event - 2026wiapp).
+                            Select a team from the dropdown (must be from the 2026 La Crosse District Event - 2026wilax).
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
                     <div class="col-12">
                         <label>Where robot starts *</label>
                         <div class="field-selector" id="fieldSelector">
-                            <img src="images/field.png" alt="Field diagram" draggable="false" />
+                            <img src="../images/field.png" alt="Field diagram" draggable="false" />
                             <div class="field-positions">
                                 <!-- Left side (Red alliance) positions -->
                                 <div class="field-position" data-value="1" style="left: 24%; top: 22%;">
@@ -139,6 +139,7 @@
                     </div>
 
                     <div class="col-12">
+<<<<<<< HEAD:match-scouting.html
                         <label>Auto Fuel scored (active hub) *</label>
                         <select id="autoFuel">
                             <option value="" disabled selected>Select range...</option>
@@ -193,6 +194,12 @@
                                 <input type="checkbox" id="autoBumpTrenchNone" />
                                 <span>None</span>
                             </label>
+=======
+                        <label>Auto Fuel Scored *</label>
+                        <div class="seg" id="autoFuelSeg">
+                            <div class="chip" data-value="Yes">Yes</div>
+                            <div class="chip" data-value="No">No</div>
+>>>>>>> host:js/match-scouting.html
                         </div>
                     </div>
 
@@ -221,6 +228,7 @@
             <section class="screen" data-screen="2" style="display:none">
                 <div class="grid">
                     <div class="col-12">
+<<<<<<< HEAD:match-scouting.html
                         <label>Teleop Fuel scored (active hub) *</label>
                         <select id="teleopFuelActive">
                             <option value="" disabled selected>Select range...</option>
@@ -262,41 +270,66 @@
                                 <input type="checkbox" id="teleopFuelFloor" />
                                 <span>Floor</span>
                             </label>
+=======
+                        <label>Passing Shoots *</label>
+                        <div class="counter">
+                            <div class="meta">
+                                <span class="name">Passing Shoot</span>
+                            </div>
+                            <div class="ctl">
+                                <button type="button" class="btn small ghost" id="passingShootDec">-1</button>
+                                <div class="count" id="passingShootVal">0</div>
+                                <button type="button" class="btn small" id="passingShootInc">+1</button>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>What robot did while hub inactive *</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactivePlayedDefense" />
-                                <span>Played defense</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveShuttledFuel" />
-                                <span>Shuttled fuel</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveBlockedBumpTrench" />
-                                <span>Blocked bump or trench</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="inactiveCollectingFuel" />
-                                <span>Collecting fuel</span>
-                            </label>
+                        <label>Pass (push/intake) *</label>
+                        <div class="counter">
+                            <div class="meta">
+                                <span class="name">Pass (push/intake)</span>
+                            </div>
+                            <div class="ctl">
+                                <button type="button" class="btn small ghost" id="passIntakeDec">-1</button>
+                                <div class="count" id="passIntakeVal">0</div>
+                                <button type="button" class="btn small" id="passIntakeInc">+1</button>
+                            </div>
+>>>>>>> host:js/match-scouting.html
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <label>Robot shuttling? *</label>
-                        <select id="shuttling">
-                            <option value="" disabled selected>Select...</option>
-                            <option value="Great">Great</option>
-                            <option value="Good">Good</option>
-                            <option value="Average">Average</option>
-                            <option value="Bad">Bad</option>
-                            <option value="None">None</option>
-                        </select>
+                        <label>Shot on Move *</label>
+                        <div class="counter">
+                            <div class="meta">
+                                <span class="name">Shot on Move</span>
+                            </div>
+                            <div class="ctl">
+                                <button type="button" class="btn small ghost" id="shotOnMoveDec">-1</button>
+                                <div class="count" id="shotOnMoveVal">0</div>
+                                <button type="button" class="btn small" id="shotOnMoveInc">+1</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label>Shot Still *</label>
+                        <div class="counter">
+                            <div class="meta">
+                                <span class="name">Shot Still</span>
+                            </div>
+                            <div class="ctl">
+                                <button type="button" class="btn small ghost" id="shotStillDec">-1</button>
+                                <div class="count" id="shotStillVal">0</div>
+                                <button type="button" class="btn small" id="shotStillInc">+1</button>
+                            </div>
+                        </div>
+                        <div class="shot-map" id="shotStillMap">
+                            <img src="../images/Gridded 2026 Rebuilt field (3).png" alt="Field" draggable="false" />
+                            <div class="shot-markers" id="shotStillMarkers"></div>
+                        </div>
+                        <div class="field-selector-hint">Tap field to mark shot location</div>
                     </div>
                 </div>
             </section>
@@ -317,7 +350,7 @@
                     <div class="col-12">
                         <label>Where robot climbed on tower *</label>
                         <div class="tower-selector-zones" id="climbSelector">
-                            <img src="images/tower.png" alt="Tower diagram" draggable="false" />
+                            <img src="../images/tower.png" alt="Tower diagram" draggable="false" />
                             <div class="tower-zones">
                                 <div class="tower-zone" data-value="Left">
                                     <span class="zone-label">LEFT</span>
@@ -350,10 +383,14 @@
                 <div class="grid">
                     <div class="col-12">
                         <label>Was team affected by defense? *</label>
-                        <div class="seg" id="affectedByDefenseSeg">
-                            <div class="chip" data-value="Yes">Yes</div>
-                            <div class="chip" data-value="No">No</div>
-                        </div>
+                        <select id="affectedByDefenseSeg">
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Stuck on Bump">Stuck on Bump</option>
+                            <option value="Robot got pushed & Missed shots">Robot got pushed & Missed shots</option>
+                            <option value="Robots tried defense (not effective)">Robots tried defense (not effective)</option>
+                            <option value="Pushed robot out of range">Pushed robot out of range</option>
+                            <option value="No defense attempted on robot">No defense attempted on robot</option>
+                        </select>
                     </div>
 
                     <div class="col-12">
@@ -361,8 +398,9 @@
                         <select id="robotStatus">
                             <option value="" disabled selected>Select...</option>
                             <option value="OK">OK</option>
-                            <option value="Broke/Stopped">Broke/Stopped</option>
-                            <option value="Brownout/Struggled">Brownout/Struggled</option>
+                            <option value="Broke">Broke</option>
+                            <option value="Stopped">Stopped</option>
+                            <option value="Brownout">Brownout</option>
                             <option value="Disabled">Disabled</option>
                             <option value="Tippy">Tippy</option>
                             <option value="Radio">Radio</option>
@@ -444,12 +482,10 @@
         </div>
     </div>
 </main>
-        
 
-                    </div>
 <div class="toast" id="toast"></div>
 
-<script src="js/config.js"></script>
-<script src="js/match-scouting.js"></script>
+<script src="config.js"></script>
+<script src="match-scouting.js"></script>
 </body>
 </html>
