@@ -17,13 +17,15 @@
  * 11. Use this SAME URL in both match-scouting.js AND pit-scouting.js
  */
 
+
 // Configuration
 const MATCH_SHEET_NAME = "Match Scouting Data";
 const PIT_SHEET_NAME = "Pit Scouting Data";
 
-// Allowed team codes for submission (server-side security gate)
-// Add codes here for each allied team that should be able to submit data
-const ALLOWED_CODES = ["your-secret-code-here"]; // Example: ["knights", "roundtable"]
+// Allowed submit codes for submission (server-side security gate)
+// IMPORTANT: These codes are stored ONLY in Apps Script, NOT in the public repo
+// Add/change codes here to authorize scouts to submit data
+const ALLOWED_SUBMIT_CODES = ["Your-Password-Here", "Another-Valid-Code"]; // <-- REPLACE with your actual codes
 
 /**
  * Handle POST requests from both scouting apps
@@ -90,18 +92,18 @@ function doPost(e) {
 
     Logger.log("Data parsed successfully");
 
-    // Validate team code
-    const teamCode = data.teamCode || "";
-    if (!teamCode || ALLOWED_CODES.indexOf(teamCode) === -1) {
-      Logger.log("REJECTED: Invalid or missing team code: " + teamCode);
+    // Validate submit code
+    const submitCode = data.submitCode || "";
+    if (!submitCode || ALLOWED_SUBMIT_CODES.indexOf(submitCode) === -1) {
+      Logger.log("REJECTED: Invalid or missing submit code: " + submitCode);
       return ContentService
         .createTextOutput(JSON.stringify({
           status: "error",
-          message: "Invalid team code"
+          message: "Invalid submit code. Ask your lead scout for the correct code."
         }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    Logger.log("Team code validated: " + teamCode);
+    Logger.log("Submit code validated: " + submitCode);
 
     // Route based on scouting type
     const scoutingType = data.scoutingType || "MATCH";
@@ -220,41 +222,17 @@ function writeToSheetMatch(data) {
 
     // Auto (Screen 1)
     data.startPos || "",                // Start Position
-<<<<<<< HEAD
-    data.autoFuelRange || "",           // Auto Fuel Range
-    data.fuelNeutralZone ? "Yes" : "No", // Auto - Fuel From Neutral Zone
-    data.fuelOutpost ? "Yes" : "No",    // Auto - Fuel From Outpost
-    data.fuelDepot ? "Yes" : "No",      // Auto - Fuel From Depot
-    data.fuelFloor ? "Yes" : "No",      // Auto - Fuel From Floor
-    data.autoBumpOver ? "Yes" : "No",   // Over Bump
-    data.autoTrenchUnder ? "Yes" : "No", // Under Trench
-    data.autoBumpTrenchNone ? "Yes" : "No", // Bump/Trench None
-=======
     data.autoFuel || "",                // Auto Fuel Scored
->>>>>>> host
     data.autoShuttling || "",           // Auto Shuttling
     data.autoTower || "NONE",           // Auto Tower
     data.autoTowerPoints || 0,          // Auto Tower Pts
 
     // Teleop (Screen 2)
-<<<<<<< HEAD
-    data.teleopFuelActiveRange || "",   // Teleop Fuel (Active) Range
-    data.teleopFuelNeutralZone ? "Yes" : "No", // Teleop - Fuel From Neutral Zone
-    data.teleopFuelOutpost ? "Yes" : "No",     // Teleop - Fuel From Outpost
-    data.teleopFuelDepot ? "Yes" : "No",       // Teleop - Fuel From Depot
-    data.teleopFuelFloor ? "Yes" : "No",       // Teleop - Fuel From Floor
-    data.inactivePlayedDefense ? "Yes" : "No", // Inactive - Played Defense
-    data.inactiveShuttledFuel ? "Yes" : "No",  // Inactive - Shuttled Fuel
-    data.inactiveBlockedBumpTrench ? "Yes" : "No", // Inactive - Blocked Bump/Trench
-    data.inactiveCollectingFuel ? "Yes" : "No", // Inactive - Collecting Fuel
-    data.shuttling || "",               // Shuttling
-=======
     data.passingShoot || 0,             // Passing Shoots
     data.passIntake || 0,               // Pass (Push/Intake)
     data.shotOnMove || 0,               // Shot on Move
     data.shotStill || 0,                // Shot Still
     data.shotStillPositions || "",      // Shot Still Zones
->>>>>>> host
 
     // Endgame (Screen 3)
     data.teleopTower || "NONE",         // Endgame Tower Level
@@ -266,13 +244,8 @@ function writeToSheetMatch(data) {
     data.affectedByDefense || "",       // Affected By Defense
     data.robotStatus || "",             // Robot Status
     data.defenseRating || "",           // Defense Rating
-    data.crossedBump || "",             // Crossed Bump
-    data.crossedTrench || "",           // Crossed Trench
     data.comments || "",                // Comments
-    data.rank || "",                    // Rank (1-3)
-
-    // Calculated
-    data.estPoints || 0                 // Est Points
+    data.rank || ""                     // Rank (1-3)
   ];
 
   // Append the row
@@ -338,7 +311,7 @@ function writeToSheetPit(data) {
   sheet.appendRow(row);
 
   const currentRow = sheet.getLastRow();
-  const photoColumn = 19; // Column S (19th column) - the Photo column
+  const photoColumn = 18; // Column R (18th column) - the Photo column
 
   // Insert robot photo if provided
   if (data.robotPhoto && data.robotPhoto.length > 0) {
@@ -419,36 +392,16 @@ function createHeadersMatch(sheet) {
     "Alliance",
     // Auto (Screen 1)
     "Start Position",
-    "Auto Fuel Range",
-    "Auto - Fuel From Neutral Zone",
-    "Auto - Fuel From Outpost",
-    "Auto - Fuel From Depot",
-    "Auto - Fuel From Floor",
-    "Over Bump",
-    "Under Trench",
-    "Bump/Trench None",
+    "Auto Fuel Scored",
     "Auto Shuttling",
     "Auto Tower",
     "Auto Tower Pts",
     // Teleop (Screen 2)
-<<<<<<< HEAD
-    "Teleop Fuel (Active) Range",
-    "Teleop - Fuel From Neutral Zone",
-    "Teleop - Fuel From Outpost",
-    "Teleop - Fuel From Depot",
-    "Teleop - Fuel From Floor",
-    "Inactive - Played Defense",
-    "Inactive - Shuttled Fuel",
-    "Inactive - Blocked Bump/Trench",
-    "Inactive - Collecting Fuel",
-    "Shuttling",
-=======
     "Passing Shoots",
     "Pass (Push/Intake)",
     "Shot on Move",
     "Shot Still",
     "Shot Still Zones (L#.row / R#.row / C.row)",
->>>>>>> host
     // Endgame (Screen 3)
     "Endgame Tower Level",
     "Endgame Tower Pts",
@@ -458,12 +411,8 @@ function createHeadersMatch(sheet) {
     "Affected By Defense",
     "Robot Status",
     "Defense Rating",
-    "Crossed Bump",
-    "Crossed Trench",
     "Comments",
-    "Rank (1-3)",
-    // Calculated
-    "Est Points"
+    "Rank (1-3)"
   ];
 
   sheet.appendRow(headers);
@@ -556,40 +505,16 @@ function testMatchScouting() {
     alliance: "Blue",
     // Auto
     startPos: "1",
-<<<<<<< HEAD
-    autoFuelRange: "40-60",
-    fuelNeutralZone: true,
-    fuelOutpost: false,
-    fuelDepot: true,
-    fuelFloor: false,
-    autoBumpOver: true,
-    autoTrenchUnder: false,
-    autoBumpTrenchNone: false,
-=======
     autoFuel: "Yes",
->>>>>>> host
     autoShuttling: "Yes",
     autoTower: "L1",
     autoTowerPoints: 15,
     // Teleop
-<<<<<<< HEAD
-    teleopFuelActiveRange: "100-120",
-    teleopFuelNeutralZone: true,
-    teleopFuelOutpost: true,
-    teleopFuelDepot: false,
-    teleopFuelFloor: false,
-    inactivePlayedDefense: true,
-    inactiveShuttledFuel: false,
-    inactiveBlockedBumpTrench: true,
-    inactiveCollectingFuel: false,
-    shuttling: "Great",
-=======
     passingShoot: 3,
     passIntake: 2,
     shotOnMove: 5,
     shotStill: 8,
     shotStillPositions: "L2.3, C.5",
->>>>>>> host
     // Endgame
     teleopTower: "L2",
     teleopTowerPoints: 20,
@@ -599,12 +524,9 @@ function testMatchScouting() {
     affectedByDefense: "No",
     robotStatus: "OK",
     defenseRating: "Strong",
-    crossedBump: "Yes",
-    crossedTrench: "No",
     comments: "Great robot, very consistent!",
     rank: "1",
-    // Calculated
-    estPoints: 75
+    submitCode: "1792x1259"
   };
 
   try {
@@ -638,7 +560,6 @@ function testPitScouting() {
 
     // Robot Design
     drivetrain: "Swerve",
-    motorType: "NEO",
     width: "28",
     length: "32",
     height: "48",

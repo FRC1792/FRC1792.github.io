@@ -427,7 +427,6 @@
 
     function validateRobotDesign(){
         const drivetrain = $("drivetrain").value;
-        const motorType = $("motorType").value;
         const programmingLang = $("programmingLang").value;
         const width = $("width").value.trim();
         const length = $("length").value.trim();
@@ -466,6 +465,13 @@
         // Robot photo is required
         if (!state.photoBase64) {
             toast("⚠️ Robot photo is required");
+            return false;
+        }
+
+        // Submit code is required
+        const submitCode = $("submitCode").value.trim();
+        if (!submitCode) {
+            toast("⚠️ Enter submit code to authorize submission");
             return false;
         }
 
@@ -677,7 +683,7 @@
             specialFeatures: getVal("specialFeatures"),
             robotPhoto: state.photoBase64 || "",
 
-            teamCode: _sessionData.teamCode || ""
+            submitCode: getVal("submitCode")
         };
     }
 
@@ -688,7 +694,6 @@
             return item.scoutName === payload.scoutName &&
                    item.teamNumber === payload.teamNumber &&
                    item.drivetrain === payload.drivetrain &&
-                   item.motorType === payload.motorType &&
                    item.width === payload.width &&
                    item.length === payload.length &&
                    item.height === payload.height &&
