@@ -16,6 +16,9 @@
     // Settings loaded from js/config.js (edit that file, not this one)
     const CONFIG = SCOUTING_CONFIG;
 
+    const eventKeyNoteEl = document.getElementById("eventKeyNote");
+    if (eventKeyNoteEl) eventKeyNoteEl.textContent = CONFIG.EVENT_KEY;
+
     const TBA_TEAMS_AT_EVENT = (eventKey) =>
         `https://www.thebluealliance.com/api/v3/event/${encodeURIComponent(eventKey)}/teams/simple`;
 
