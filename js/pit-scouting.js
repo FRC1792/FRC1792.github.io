@@ -32,7 +32,6 @@
         canClimb: null,
         hopper: null,
         photoBase64: null,
-        ballCapacity: 0,
     };
 
     const $ = (id) => document.getElementById(id);
@@ -109,9 +108,7 @@
         $("length").value = "";
         $("height").value = "";
         $("programmingLang").value = "";
-        $("hopperLength").value = "";
-        $("hopperWidth").value = "";
-        $("hopperHeight").value = "";
+        $("ballCapacity").value = "";
         $("specialFeatures").value = "";
 
         state.canClimb = null;
@@ -144,62 +141,8 @@
         ch.addEventListener("click", ()=>{
             state.hopper = ch.dataset.value;
             renderSegments();
-            updateHopperDimensionsVisibility();
         });
     });
-
-    function updateHopperDimensionsVisibility(){
-        const hopperDimensionsContainer = $("hopperDimensionsContainer");
-        if (state.hopper === "Yes") {
-            hopperDimensionsContainer.style.display = "block";
-        } else {
-            hopperDimensionsContainer.style.display = "none";
-            // Clear hopper dimensions when hidden
-            $("hopperLength").value = "";
-            $("hopperWidth").value = "";
-            $("hopperHeight").value = "";
-            // Hide ball capacity display and reset state
-            $("ballCapacityDisplay").style.display = "none";
-            state.ballCapacity = 0;
-        }
-    }
-
-    function calculateBallCapacity() {
-        const length = parseFloat($("hopperLength").value);
-        const width = parseFloat($("hopperWidth").value);
-        const height = parseFloat($("hopperHeight").value);
-
-        // Only calculate if all dimensions are provided
-        if (!length || !width || !height || length <= 0 || width <= 0 || height <= 0) {
-            $("ballCapacityDisplay").style.display = "none";
-            state.ballCapacity = 0;
-            return;
-        }
-
-        // Calculate hopper volume (cubic inches)
-        const hopperVolume = length * width * height;
-
-        // Ball specifications
-        const ballDiameter = 5.91; // inches
-        const ballRadius = ballDiameter / 2; // 2.955 inches
-        const ballVolume = (4 / 3) * Math.PI * Math.pow(ballRadius, 3); // ~108.19 cubic inches
-
-        // Packing efficiency for random sphere packing (~64%)
-        const packingEfficiency = 0.64;
-
-        // Calculate estimated capacity
-        const estimatedCapacity = Math.floor((hopperVolume / ballVolume) * packingEfficiency);
-
-        // Store in state and display the result
-        state.ballCapacity = estimatedCapacity;
-        $("ballCapacityValue").textContent = estimatedCapacity + " balls";
-        $("ballCapacityDisplay").style.display = "flex";
-    }
-
-    // Add event listeners to hopper dimension inputs
-    $("hopperLength").addEventListener("input", calculateBallCapacity);
-    $("hopperWidth").addEventListener("input", calculateBallCapacity);
-    $("hopperHeight").addEventListener("input", calculateBallCapacity);
 
     // Photo capture functionality
     let cameraStream = null;
@@ -447,18 +390,7 @@
         if (!programmingLang){ toast("⚠️ Select programming language"); return false; }
         if (state.canClimb === null){ toast("⚠️ Select tower climb level"); return false; }
         if (state.hopper === null){ toast("⚠️ Indicate if robot has hopper"); return false; }
-
-        // Contingency: Only validate hopper dimensions if robot has a hopper
-        if (state.hopper === "Yes") {
-            const hopperLength = $("hopperLength").value.trim();
-            const hopperWidth = $("hopperWidth").value.trim();
-            const hopperHeight = $("hopperHeight").value.trim();
-
-            if (!hopperLength || !hopperWidth || !hopperHeight) {
-                toast("⚠️ Enter all hopper dimensions");
-                return false;
-            }
-        }
+        if (!$("ballCapacity").value.trim()){ toast("⚠️ Enter ball capacity"); return false; }
 
         if (!specialFeatures){ toast("⚠️ Describe special features/mechanisms"); return false; }
 
@@ -676,10 +608,7 @@
             programmingLang: getVal("programmingLang"),
             canClimb: state.canClimb || "No",
             hopper: state.hopper || "No",
-            hopperLength: getVal("hopperLength"),
-            hopperWidth: getVal("hopperWidth"),
-            hopperHeight: getVal("hopperHeight"),
-            ballCapacity: state.ballCapacity || 0,
+            ballCapacity: getVal("ballCapacity"),
             specialFeatures: getVal("specialFeatures"),
             robotPhoto: state.photoBase64 || "",
 

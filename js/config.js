@@ -18,8 +18,8 @@ const SCOUTING_CONFIG = {
     TBA_API_KEY: "QbQkb0gqMlzea1xJM9Mo81lCIEFeHcHduBAj4X2M2SJZI7d7rhxXpHepMhseNOdZ",
 
     // Event code (find at thebluealliance.com — last part of event URL)
-    // Example: "2026wisev" = 2026 La Crosse District
-    EVENT_KEY: "2026wilax",
+    // Example: "2026wicmp" = 2026 Wisconsin State Championship at Waukesha West High School
+    EVENT_KEY: "2026wicmp",
 
     // Set to false to disable team loading from TBA
     ENABLE_TEAM_LOADING: true,

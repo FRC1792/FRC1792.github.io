@@ -157,30 +157,9 @@
                         </div>
                     </div>
 
-                    <div class="col-12" id="hopperDimensionsContainer" style="display:none">
-                        <label>Hopper dimensions (inches) *</label>
-                        <div class="row">
-                            <div style="flex: 1;">
-                                <input id="hopperLength" type="number" placeholder="Length" min="0" step="0.5" inputmode="decimal" />
-                            </div>
-                            <span style="color: var(--muted);">×</span>
-                            <div style="flex: 1;">
-                                <input id="hopperWidth" type="number" placeholder="Width" min="0" step="0.5" inputmode="decimal" />
-                            </div>
-                            <span style="color: var(--muted);">×</span>
-                            <div style="flex: 1;">
-                                <input id="hopperHeight" type="number" placeholder="Height" min="0" step="0.5" inputmode="decimal" />
-                            </div>
-                        </div>
-                        <div class="counter" id="ballCapacityDisplay" style="background: rgba(33,197,93,.08); border-color: rgba(33,197,93,.25); margin-top: 12px; display:none;">
-                            <div class="meta">
-                                <div class="name">Estimated Ball Capacity (auto-calculated)</div>
-                                <div class="desc">Based on 5.91" diameter fuel and 64% packing efficiency</div>
-                            </div>
-                            <div class="ctl">
-                                <div class="count" id="ballCapacityValue" style="color: var(--ok); font-size: 1.4rem;">0</div>
-                            </div>
-                        </div>
+                    <div class="col-12">
+                        <label>Ball Capacity *</label>
+                        <input id="ballCapacity" type="number" placeholder="Number of balls" min="0" step="1" inputmode="numeric" />
                     </div>
 
                     <div class="col-12">
