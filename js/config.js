@@ -22,7 +22,7 @@ const SCOUTING_CONFIG = {
     EVENT_KEY: "2026wimc",
 
     // Set to false to disable team loading from TBA
-    ENABLE_TEAM_LOADING: true,
+    ENABLE_TEAM_LOADING: false,
 
     // Secret code required to access scouting (client-side gate)
     // The real security is server-side in Apps Script (ALLOWED_CODES)
