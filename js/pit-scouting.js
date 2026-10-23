@@ -612,6 +612,8 @@
             return el ? el.value.trim() : defaultVal;
         };
 
+        const sessionData = JSON.parse(sessionStorage.getItem("scoutSession") || "{}");
+
         return {
             scoutingType: "PIT",
             timestampISO: new Date().toISOString(),

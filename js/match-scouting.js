@@ -616,6 +616,7 @@
             return el ? el.value : defaultVal;
         };
 
+        const sessionData = JSON.parse(sessionStorage.getItem("scoutSession") || "{}");
 
         return {
             timestampISO: new Date().toISOString(),

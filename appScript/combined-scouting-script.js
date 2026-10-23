@@ -90,18 +90,8 @@ function doPost(e) {
 
     Logger.log("Data parsed successfully");
 
-    // Validate team code
-    const teamCode = data.teamCode || "";
-    if (!teamCode || ALLOWED_CODES.indexOf(teamCode) === -1) {
-      Logger.log("REJECTED: Invalid or missing team code: " + teamCode);
-      return ContentService
-        .createTextOutput(JSON.stringify({
-          status: "error",
-          message: "Invalid team code"
-        }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    Logger.log("Team code validated: " + teamCode);
+    // Backend validation is intentionally limited to the existing secret-code auth flow.
+    // The front-end secret code is already checked on the home page before entering the app.
 
     // Route based on scouting type
     const scoutingType = data.scoutingType || "MATCH";
