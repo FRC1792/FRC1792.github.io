@@ -15,11 +15,11 @@ const SCOUTING_CONFIG = {
 
     // The Blue Alliance API key
     // Get this from: thebluealliance.com/account → Read API Keys
-    TBA_API_KEY: "QbQkb0gqMlzea1xJM9Mo81lCIEFeHcHduBAj4X2M2SJZI7d7rhxXpHepMhseNOdZ",
+    TBA_API_KEY: "https://www.thebluealliance.com/event/2026iltrr#media",
 
     // Event code (find at thebluealliance.com — last part of event URL)
     // Example: "2026wicmp" = 2026 Wisconsin State Championship at Waukesha West High School
-    EVENT_KEY: "2026wimc",
+    EVENT_KEY: "2026iltrr",
 
     // Set to false to disable team loading from TBA
     ENABLE_TEAM_LOADING: false,
