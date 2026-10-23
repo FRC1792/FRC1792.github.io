@@ -447,9 +447,28 @@
         }
     }
 
+    function applyFallbackTeams(){
+        const fallback = Array.isArray(CONFIG.FALLBACK_TEAMS) ? CONFIG.FALLBACK_TEAMS : [];
+        if (!fallback.length) return false;
+
+        state.loadedTeams = fallback
+            .map(team => ({
+                number: Number(team.number),
+                name: team.name || `Team ${team.number}`
+            }))
+            .sort((a,b)=>a.number-b.number);
+
+        return true;
+    }
+
     async function loadTeams(){
-        if (!CONFIG.ENABLE_TEAM_LOADING) {
-            console.log("Team loading disabled");
+        if (!CONFIG.ENABLE_TEAM_LOADING || !CONFIG.TBA_API_KEY || CONFIG.TBA_API_KEY === "YOUR_TBA_API_KEY_HERE") {
+            if (applyFallbackTeams()) {
+                console.log("Using fallback team list");
+                toast("✓ Loaded fallback teams");
+            } else {
+                console.log("Team loading disabled");
+            }
             return;
         }
 
@@ -491,8 +510,9 @@
         }catch(err){
             console.error("Failed to load teams from API:", err);
 
-            // If we have cached teams, we're OK
-            if (hadCached) {
+            if (applyFallbackTeams()) {
+                toast("⚠️ Using fallback team list");
+            } else if (hadCached) {
                 toast("⚠️ Using cached teams (offline)");
             } else {
                 toast("⚠️ Couldn't load teams - you can still enter team numbers");
