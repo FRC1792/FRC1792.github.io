@@ -21,8 +21,8 @@ const SCOUTING_CONFIG = {
     // Example: "2026wicmp" = 2026 Wisconsin State Championship at Waukesha West High School
     EVENT_KEY: "2026iltrr",
 
-    // Set to false to disable team loading from TBA
-    ENABLE_TEAM_LOADING: false,
+    // Set to true to load team names/numbers from TBA
+    ENABLE_TEAM_LOADING: true,
 
     // Secret code required to access scouting (client-side gate)
     // The real security is server-side in Apps Script (ALLOWED_CODES)
