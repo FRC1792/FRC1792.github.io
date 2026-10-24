@@ -20,19 +20,8 @@
         $("phaseAuth").style.display = phase === "auth" ? "block" : "none";
         $("phaseSelect").style.display = phase === "select" ? "block" : "none";
         $("headerSubtitle").textContent = phase === "auth"
-            ? "Select your team"
+            ? "Enter your team code"
             : "Select your scouting mode";
-    }
-
-    function populateTeamOptions() {
-        const select = $("secretCode");
-        const options = (CONFIG.TEAM_OPTIONS && CONFIG.TEAM_OPTIONS.length)
-            ? CONFIG.TEAM_OPTIONS
-            : [{ value: CONFIG.SECRET_CODE, label: "Team code" }];
-
-        select.innerHTML = '<option value="">Select a team</option>' + options.map(option =>
-            `<option value="${option.value}">${option.label}</option>`
-        ).join("");
     }
 
     function showDemoBanner(show) {
@@ -50,12 +39,10 @@
         showPhase("auth");
     }
 
-    populateTeamOptions();
-
     // --- Enter button ---
     $("btnEnter").addEventListener("click", attemptLogin);
 
-    // --- Enter key on dropdown ---
+    // --- Enter key on input ---
     $("secretCode").addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -65,13 +52,9 @@
 
     function attemptLogin() {
         const code = $("secretCode").value.trim();
-        if (!code) {
-            $("codeError").textContent = "Please select a valid team.";
-            $("codeError").style.display = "block";
-            return;
-        }
+        if (!code) return;
 
-        if (code === CONFIG.SECRET_CODE || (CONFIG.TEAM_OPTIONS && CONFIG.TEAM_OPTIONS.some(option => option.value === code))) {
+        if (code === CONFIG.SECRET_CODE) {
             sessionStorage.setItem("scoutSession", JSON.stringify({
                 authenticated: true,
                 teamCode: code
@@ -81,7 +64,6 @@
             showDemoBanner(false);
         } else {
             // Wrong code — shake and show error
-            $("codeError").textContent = "Please select a valid team.";
             $("codeError").style.display = "block";
             const wrap = $("codeInputWrap");
             wrap.classList.remove("shake");

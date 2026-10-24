@@ -17,7 +17,7 @@
             <img src="images/logo.svg" alt="FRC 1792 Logo" class="header-logo" onerror="this.onerror=null; this.src='images/favicon.ico';">
             <div class="brand-text">
                 <div class="t1">1792 Scouting ● 2026 REBUILT</div>
-                <div class="t2" id="headerSubtitle">Select your team</div>
+                <div class="t2" id="headerSubtitle">Enter your team code</div>
             </div>
         </div>
         <div class="pill">
@@ -38,20 +38,18 @@
                     FRC 1792 SCOUTING
                 </h1>
                 <p style="color: var(--muted); font-size: 1rem; margin: 0;">
-                    Select your team to begin scouting
+                    Enter your team code to begin scouting
                 </p>
             </div>
 
-            <!-- Team dropdown -->
+            <!-- Code input -->
             <div style="max-width: 400px; margin: 0 auto;">
                 <div id="codeInputWrap" style="margin-bottom: 16px;">
-                    <select id="secretCode" aria-label="Select your team" autocomplete="off"
-                            style="width: 100%; text-align: center; font-size: 1.05rem; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text);">
-                        <option value="">Select a team</option>
-                    </select>
+                    <input type="password" id="secretCode" placeholder="Team code" autocomplete="off"
+                           style="text-align: center; font-size: 1.1rem; letter-spacing: 2px;">
                 </div>
                 <div id="codeError" style="color: var(--danger); text-align: center; font-size: 0.9rem; margin-bottom: 12px; display: none;">
-                    Please select a valid team.
+                    Incorrect code. Try again.
                 </div>
                 <button id="btnEnter" class="btn primary" style="width: 100%; height: 52px; font-size: 1.1rem; margin-bottom: 20px;">
                     Enter

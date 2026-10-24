@@ -379,7 +379,7 @@
         const alliance = $("alliance").value;
 
         if (!name){ toast("⚠️ Enter student name"); return false; }
-        if (!scoutTeam){ toast("⚠️ Select your team (1792 or 1259)"); return false; }
+        if (!scoutTeam){ toast("⚠️ Select your team"); return false; }
         if (!match || match < 1){ toast("⚠️ Enter match number"); return false; }
         if (!alliance){ toast("⚠️ Select alliance color"); return false; }
         if (!state.selectedTeam){ toast("⚠️ Select a team from the list"); return false; }
