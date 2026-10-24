@@ -217,6 +217,11 @@ function normalizeMatchData(data) {
   normalized.autoShuttling = getFirstDefined(normalized, ["autoShuttling", "shuttling"], "");
   normalized.autoTower = getFirstDefined(normalized, ["autoTower"], "NONE");
   normalized.autoTowerPoints = Number(getFirstDefined(normalized, ["autoTowerPoints"], 0)) || 0;
+  normalized.passingShoot = Number(getFirstDefined(normalized, ["passingShoot"], 0)) || 0;
+  normalized.passIntake = Number(getFirstDefined(normalized, ["passIntake"], 0)) || 0;
+  normalized.shotOnMove = Number(getFirstDefined(normalized, ["shotOnMove"], 0)) || 0;
+  normalized.shotStill = Number(getFirstDefined(normalized, ["shotStill"], 0)) || 0;
+  normalized.shotStillPositions = getFirstDefined(normalized, ["shotStillPositions", "shotStillZones"], "");
   normalized.teleopFuelActiveRange = getFirstDefined(normalized, ["teleopFuelActiveRange", "teleopFuelRange", "teleopFuelActive"], "");
   normalized.teleopFuelNeutralZone = asBooleanFromAny(normalized, ["teleopFuelNeutralZone", "teleopFuelNeutral"], false);
   normalized.teleopFuelOutpost = asBooleanFromAny(normalized, ["teleopFuelOutpost", "teleopOutpost"], false);
@@ -236,7 +241,7 @@ function normalizeMatchData(data) {
   normalized.defenseRating = getFirstDefined(normalized, ["defenseRating"], "");
   normalized.crossedBump = getFirstDefined(normalized, ["crossedBump"], "");
   normalized.crossedTrench = getFirstDefined(normalized, ["crossedTrench"], "");
-  normalized.comments = getFirstDefined(normalized, ["comments"], "");
+  normalized.comments = getFirstDefined(normalized, ["comments", "comment", "notes"], "");
   normalized.rank = getFirstDefined(normalized, ["rank"], "");
   normalized.estPoints = Number(getFirstDefined(normalized, ["estPoints"], 0)) || 0;
   return normalized;
@@ -269,6 +274,73 @@ function normalizePitData(data) {
 /**
  * Write MATCH scouting data to the Google Sheet
  */
+function ensureMatchHeaders(sheet) {
+  const expectedHeaders = [
+    "Timestamp",
+    "Scout Name",
+    "Scout Team",
+    "Event Code",
+    "Match #",
+    "Team #",
+    "Alliance",
+    "Start Position",
+    "Auto Fuel Range",
+    "Auto - Fuel From Neutral Zone",
+    "Auto - Fuel From Outpost",
+    "Auto - Fuel From Depot",
+    "Auto - Fuel From Floor",
+    "Over Bump",
+    "Under Trench",
+    "Bump/Trench None",
+    "Auto Shuttling",
+    "Auto Tower",
+    "Auto Tower Pts",
+    "Passing Shoots",
+    "Pass (Push/Intake)",
+    "Shot on Move",
+    "Shot Still Count",
+    "Shot Still Zones",
+    "Teleop Fuel (Active) Range",
+    "Teleop - Fuel From Neutral Zone",
+    "Teleop - Fuel From Outpost",
+    "Teleop - Fuel From Depot",
+    "Teleop - Fuel From Floor",
+    "Inactive - Played Defense",
+    "Inactive - Shuttled Fuel",
+    "Inactive - Blocked Bump/Trench",
+    "Inactive - Collecting Fuel",
+    "Shuttling",
+    "Endgame Tower Level",
+    "Endgame Tower Pts",
+    "Climb Position",
+    "Shot In Hub",
+    "Affected By Defense",
+    "Robot Status",
+    "Defense Rating",
+    "Crossed Bump",
+    "Crossed Trench",
+    "Comments",
+    "Rank (1-3)",
+    "Est Points"
+  ];
+
+  const currentCols = Math.max(sheet.getLastColumn(), expectedHeaders.length);
+  const currentHeader = sheet.getRange(1, 1, 1, currentCols).getValues()[0] || [];
+  const target = [];
+
+  for (let i = 0; i < expectedHeaders.length; i++) {
+    target[i] = currentHeader[i] !== undefined && currentHeader[i] !== "" ? currentHeader[i] : expectedHeaders[i];
+  }
+
+  if (sheet.getLastColumn() < expectedHeaders.length) {
+    sheet.insertColumnsAfter(sheet.getLastColumn(), expectedHeaders.length - sheet.getLastColumn());
+  }
+
+  sheet.getRange(1, 1, 1, expectedHeaders.length).setValues([expectedHeaders]);
+  sheet.setFrozenRows(1);
+  Logger.log("✓ Match headers ensured for current schema");
+}
+
 function writeToSheetMatch(data) {
   Logger.log("Writing to match sheet...");
 
@@ -288,6 +360,8 @@ function writeToSheetMatch(data) {
     Logger.log("Creating match headers...");
     createHeadersMatch(sheet);
   }
+
+  ensureMatchHeaders(sheet);
 
   // Parse timestamp
   const timestamp = normalizedData.timestampISO ? new Date(normalizedData.timestampISO) : new Date();
@@ -318,6 +392,11 @@ function writeToSheetMatch(data) {
     normalizedData.autoTowerPoints || 0,          // Auto Tower Pts
 
     // Teleop (Screen 2)
+    normalizedData.passingShoot || 0,              // Passing Shoots
+    normalizedData.passIntake || 0,                 // Pass (Push/Intake)
+    normalizedData.shotOnMove || 0,                // Shot on Move
+    normalizedData.shotStill || 0,                  // Shot Still Count
+    normalizedData.shotStillPositions || "",      // Shot Still Zones
     normalizedData.teleopFuelActiveRange || "",   // Teleop Fuel (Active) Range
     normalizedData.teleopFuelNeutralZone ? "Yes" : "No", // Teleop - Fuel From Neutral Zone
     normalizedData.teleopFuelOutpost ? "Yes" : "No",     // Teleop - Fuel From Outpost
@@ -505,6 +584,11 @@ function createHeadersMatch(sheet) {
     "Auto Tower",
     "Auto Tower Pts",
     // Teleop (Screen 2)
+    "Passing Shoots",
+    "Pass (Push/Intake)",
+    "Shot on Move",
+    "Shot Still Count",
+    "Shot Still Zones",
     "Teleop Fuel (Active) Range",
     "Teleop - Fuel From Neutral Zone",
     "Teleop - Fuel From Outpost",
@@ -740,6 +824,9 @@ function initializeSheets() {
   } else if (matchSheet.getLastRow() === 0) {
     createHeadersMatch(matchSheet);
     messages.push("✓ Match headers added!");
+  } else {
+    ensureMatchHeaders(matchSheet);
+    messages.push("✓ Match sheet schema checked!");
   }
 
   // Initialize pit sheet
