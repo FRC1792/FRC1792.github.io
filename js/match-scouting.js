@@ -643,7 +643,13 @@
             autoTowerPoints: towerPointsAuto(state.autoTower),
             autoShuttling: state.autoShuttling || "",
 
-            teleopFuelActiveRange: String(state.passingShoot ?? 0),
+            passingShoot: Number(state.passingShoot ?? 0),
+            passIntake: Number(state.passIntake ?? 0),
+            shotOnMove: Number(state.shotOnMove ?? 0),
+            shotStill: Number(state.shotStill ?? 0),
+            shotStillPositions: Array.isArray(state.shotStillPositions) ? state.shotStillPositions.join(", ") : "",
+
+            teleopFuelActiveRange: "",
             teleopFuelNeutralZone: false,
             teleopFuelOutpost: false,
             teleopFuelDepot: false,
