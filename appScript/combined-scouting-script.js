@@ -173,11 +173,106 @@ function doGet(e) {
 }
 
 /**
+ * Read the first available value from a list of possible payload keys.
+ */
+function getFirstDefined(data, keys, fallback) {
+  for (const key of keys) {
+    if (data && Object.prototype.hasOwnProperty.call(data, key) && data[key] !== undefined && data[key] !== null && data[key] !== "") {
+      return data[key];
+    }
+  }
+  return fallback;
+}
+
+function asBooleanFromAny(data, keys, fallback) {
+  for (const key of keys) {
+    if (data && Object.prototype.hasOwnProperty.call(data, key) && data[key] !== undefined && data[key] !== null && data[key] !== "") {
+      const val = String(data[key]).trim().toLowerCase();
+      if (["true", "yes", "y", "1", "on"].includes(val)) return true;
+      if (["false", "no", "n", "0", "off"].includes(val)) return false;
+      return Boolean(data[key]);
+    }
+  }
+  return Boolean(fallback);
+}
+
+function normalizeMatchData(data) {
+  const normalized = data || {};
+
+  normalized.studentName = getFirstDefined(normalized, ["studentName", "scoutName", "scout"], "");
+  normalized.scoutTeam = getFirstDefined(normalized, ["scoutTeam", "team"], "");
+  normalized.eventCode = getFirstDefined(normalized, ["eventCode", "event"], "");
+  normalized.matchNumber = Number(getFirstDefined(normalized, ["matchNumber"], 0)) || 0;
+  normalized.teamNumber = Number(getFirstDefined(normalized, ["teamNumber"], 0)) || 0;
+  normalized.alliance = getFirstDefined(normalized, ["alliance"], "");
+  normalized.startPos = getFirstDefined(normalized, ["startPos", "autoStartPos"], "");
+  normalized.autoFuelRange = getFirstDefined(normalized, ["autoFuelRange", "autoFuel"], "");
+  normalized.fuelNeutralZone = asBooleanFromAny(normalized, ["fuelNeutralZone", "autoFuelNeutralZone"], false);
+  normalized.fuelOutpost = asBooleanFromAny(normalized, ["fuelOutpost", "autoFuelOutpost"], false);
+  normalized.fuelDepot = asBooleanFromAny(normalized, ["fuelDepot", "autoFuelDepot"], false);
+  normalized.fuelFloor = asBooleanFromAny(normalized, ["fuelFloor", "autoFuelFloor"], false);
+  normalized.autoBumpOver = asBooleanFromAny(normalized, ["autoBumpOver", "bumpOver"], false);
+  normalized.autoTrenchUnder = asBooleanFromAny(normalized, ["autoTrenchUnder", "trenchUnder"], false);
+  normalized.autoBumpTrenchNone = asBooleanFromAny(normalized, ["autoBumpTrenchNone", "bumpTrenchNone"], false);
+  normalized.autoShuttling = getFirstDefined(normalized, ["autoShuttling", "shuttling"], "");
+  normalized.autoTower = getFirstDefined(normalized, ["autoTower"], "NONE");
+  normalized.autoTowerPoints = Number(getFirstDefined(normalized, ["autoTowerPoints"], 0)) || 0;
+  normalized.teleopFuelActiveRange = getFirstDefined(normalized, ["teleopFuelActiveRange", "teleopFuelRange", "teleopFuelActive"], "");
+  normalized.teleopFuelNeutralZone = asBooleanFromAny(normalized, ["teleopFuelNeutralZone", "teleopFuelNeutral"], false);
+  normalized.teleopFuelOutpost = asBooleanFromAny(normalized, ["teleopFuelOutpost", "teleopOutpost"], false);
+  normalized.teleopFuelDepot = asBooleanFromAny(normalized, ["teleopFuelDepot", "teleopDepot"], false);
+  normalized.teleopFuelFloor = asBooleanFromAny(normalized, ["teleopFuelFloor", "teleopFloor"], false);
+  normalized.inactivePlayedDefense = asBooleanFromAny(normalized, ["inactivePlayedDefense", "playedDefense"], false);
+  normalized.inactiveShuttledFuel = asBooleanFromAny(normalized, ["inactiveShuttledFuel", "shuttledFuel"], false);
+  normalized.inactiveBlockedBumpTrench = asBooleanFromAny(normalized, ["inactiveBlockedBumpTrench", "blockedBumpTrench"], false);
+  normalized.inactiveCollectingFuel = asBooleanFromAny(normalized, ["inactiveCollectingFuel", "collectingFuel"], false);
+  normalized.shuttling = getFirstDefined(normalized, ["shuttling", "teleopShuttling"], "");
+  normalized.teleopTower = getFirstDefined(normalized, ["teleopTower", "endgameTowerLevel"], "NONE");
+  normalized.teleopTowerPoints = Number(getFirstDefined(normalized, ["teleopTowerPoints"], 0)) || 0;
+  normalized.climbPos = getFirstDefined(normalized, ["climbPos", "climbPosition"], "");
+  normalized.shotInHub = getFirstDefined(normalized, ["shotInHub", "hubShot"], "");
+  normalized.affectedByDefense = getFirstDefined(normalized, ["affectedByDefense", "wasAffectedByDefense"], "");
+  normalized.robotStatus = getFirstDefined(normalized, ["robotStatus"], "");
+  normalized.defenseRating = getFirstDefined(normalized, ["defenseRating"], "");
+  normalized.crossedBump = getFirstDefined(normalized, ["crossedBump"], "");
+  normalized.crossedTrench = getFirstDefined(normalized, ["crossedTrench"], "");
+  normalized.comments = getFirstDefined(normalized, ["comments"], "");
+  normalized.rank = getFirstDefined(normalized, ["rank"], "");
+  normalized.estPoints = Number(getFirstDefined(normalized, ["estPoints"], 0)) || 0;
+  return normalized;
+}
+
+function normalizePitData(data) {
+  const normalized = data || {};
+
+  normalized.scoutName = getFirstDefined(normalized, ["scoutName", "studentName"], "");
+  normalized.eventCode = getFirstDefined(normalized, ["eventCode", "event"], "");
+  normalized.teamNumber = Number(getFirstDefined(normalized, ["teamNumber"], 0)) || 0;
+  normalized.teamName = getFirstDefined(normalized, ["teamName"], "");
+  normalized.drivetrain = getFirstDefined(normalized, ["drivetrain"], "");
+  normalized.motorType = getFirstDefined(normalized, ["motorType"], "");
+  normalized.width = getFirstDefined(normalized, ["width"], "");
+  normalized.length = getFirstDefined(normalized, ["length"], "");
+  normalized.height = getFirstDefined(normalized, ["height"], "");
+  normalized.programmingLang = getFirstDefined(normalized, ["programmingLang", "programmingLanguage"], "");
+  normalized.canClimb = getFirstDefined(normalized, ["canClimb"], "No");
+  normalized.hopper = getFirstDefined(normalized, ["hopper"], "No");
+  normalized.hopperLength = getFirstDefined(normalized, ["hopperLength"], "");
+  normalized.hopperWidth = getFirstDefined(normalized, ["hopperWidth"], "");
+  normalized.hopperHeight = getFirstDefined(normalized, ["hopperHeight"], "");
+  normalized.ballCapacity = getFirstDefined(normalized, ["ballCapacity"], 0);
+  normalized.specialFeatures = getFirstDefined(normalized, ["specialFeatures"], "");
+  normalized.robotPhoto = getFirstDefined(normalized, ["robotPhoto"], "");
+  return normalized;
+}
+
+/**
  * Write MATCH scouting data to the Google Sheet
  */
 function writeToSheetMatch(data) {
   Logger.log("Writing to match sheet...");
 
+  const normalizedData = normalizeMatchData(data);
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(MATCH_SHEET_NAME);
 
@@ -195,68 +290,68 @@ function writeToSheetMatch(data) {
   }
 
   // Parse timestamp
-  const timestamp = data.timestampISO ? new Date(data.timestampISO) : new Date();
+  const timestamp = normalizedData.timestampISO ? new Date(normalizedData.timestampISO) : new Date();
 
   // Build row array (ordered to match HTML form flow)
   const row = [
     // System & General (Screen 0)
     timestamp,                          // Timestamp
-    data.studentName || "",             // Scout Name
-    data.scoutTeam || "",               // Scout Team
-    data.eventCode || "",               // Event Code
-    data.matchNumber || 0,              // Match #
-    data.teamNumber || 0,               // Team #
-    data.alliance || "",                // Alliance
+    normalizedData.studentName || "",             // Scout Name
+    normalizedData.scoutTeam || "",               // Scout Team
+    normalizedData.eventCode || "",               // Event Code
+    normalizedData.matchNumber || 0,              // Match #
+    normalizedData.teamNumber || 0,               // Team #
+    normalizedData.alliance || "",                // Alliance
 
     // Auto (Screen 1)
-    data.startPos || "",                // Start Position
-    data.autoFuelRange || "",           // Auto Fuel Range
-    data.fuelNeutralZone ? "Yes" : "No", // Auto - Fuel From Neutral Zone
-    data.fuelOutpost ? "Yes" : "No",    // Auto - Fuel From Outpost
-    data.fuelDepot ? "Yes" : "No",      // Auto - Fuel From Depot
-    data.fuelFloor ? "Yes" : "No",      // Auto - Fuel From Floor
-    data.autoBumpOver ? "Yes" : "No",   // Over Bump
-    data.autoTrenchUnder ? "Yes" : "No", // Under Trench
-    data.autoBumpTrenchNone ? "Yes" : "No", // Bump/Trench None
-    data.autoShuttling || "",           // Auto Shuttling
-    data.autoTower || "NONE",           // Auto Tower
-    data.autoTowerPoints || 0,          // Auto Tower Pts
+    normalizedData.startPos || "",                // Start Position
+    normalizedData.autoFuelRange || "",           // Auto Fuel Range
+    normalizedData.fuelNeutralZone ? "Yes" : "No", // Auto - Fuel From Neutral Zone
+    normalizedData.fuelOutpost ? "Yes" : "No",    // Auto - Fuel From Outpost
+    normalizedData.fuelDepot ? "Yes" : "No",      // Auto - Fuel From Depot
+    normalizedData.fuelFloor ? "Yes" : "No",      // Auto - Fuel From Floor
+    normalizedData.autoBumpOver ? "Yes" : "No",   // Over Bump
+    normalizedData.autoTrenchUnder ? "Yes" : "No", // Under Trench
+    normalizedData.autoBumpTrenchNone ? "Yes" : "No", // Bump/Trench None
+    normalizedData.autoShuttling || "",           // Auto Shuttling
+    normalizedData.autoTower || "NONE",           // Auto Tower
+    normalizedData.autoTowerPoints || 0,          // Auto Tower Pts
 
     // Teleop (Screen 2)
-    data.teleopFuelActiveRange || "",   // Teleop Fuel (Active) Range
-    data.teleopFuelNeutralZone ? "Yes" : "No", // Teleop - Fuel From Neutral Zone
-    data.teleopFuelOutpost ? "Yes" : "No",     // Teleop - Fuel From Outpost
-    data.teleopFuelDepot ? "Yes" : "No",       // Teleop - Fuel From Depot
-    data.teleopFuelFloor ? "Yes" : "No",       // Teleop - Fuel From Floor
-    data.inactivePlayedDefense ? "Yes" : "No", // Inactive - Played Defense
-    data.inactiveShuttledFuel ? "Yes" : "No",  // Inactive - Shuttled Fuel
-    data.inactiveBlockedBumpTrench ? "Yes" : "No", // Inactive - Blocked Bump/Trench
-    data.inactiveCollectingFuel ? "Yes" : "No", // Inactive - Collecting Fuel
-    data.shuttling || "",               // Shuttling
+    normalizedData.teleopFuelActiveRange || "",   // Teleop Fuel (Active) Range
+    normalizedData.teleopFuelNeutralZone ? "Yes" : "No", // Teleop - Fuel From Neutral Zone
+    normalizedData.teleopFuelOutpost ? "Yes" : "No",     // Teleop - Fuel From Outpost
+    normalizedData.teleopFuelDepot ? "Yes" : "No",       // Teleop - Fuel From Depot
+    normalizedData.teleopFuelFloor ? "Yes" : "No",       // Teleop - Fuel From Floor
+    normalizedData.inactivePlayedDefense ? "Yes" : "No", // Inactive - Played Defense
+    normalizedData.inactiveShuttledFuel ? "Yes" : "No",  // Inactive - Shuttled Fuel
+    normalizedData.inactiveBlockedBumpTrench ? "Yes" : "No", // Inactive - Blocked Bump/Trench
+    normalizedData.inactiveCollectingFuel ? "Yes" : "No", // Inactive - Collecting Fuel
+    normalizedData.shuttling || "",               // Shuttling
 
     // Endgame (Screen 3)
-    data.teleopTower || "NONE",         // Endgame Tower Level
-    data.teleopTowerPoints || 0,        // Endgame Tower Pts
-    data.climbPos || "",                // Climb Position
-    data.shotInHub || "",               // Shot In Hub
+    normalizedData.teleopTower || "NONE",         // Endgame Tower Level
+    normalizedData.teleopTowerPoints || 0,        // Endgame Tower Pts
+    normalizedData.climbPos || "",                // Climb Position
+    normalizedData.shotInHub || "",               // Shot In Hub
 
     // Misc (Screen 4)
-    data.affectedByDefense || "",       // Affected By Defense
-    data.robotStatus || "",             // Robot Status
-    data.defenseRating || "",           // Defense Rating
-    data.crossedBump || "",             // Crossed Bump
-    data.crossedTrench || "",           // Crossed Trench
-    data.comments || "",                // Comments
-    data.rank || "",                    // Rank (1-3)
+    normalizedData.affectedByDefense || "",       // Affected By Defense
+    normalizedData.robotStatus || "",             // Robot Status
+    normalizedData.defenseRating || "",           // Defense Rating
+    normalizedData.crossedBump || "",             // Crossed Bump
+    normalizedData.crossedTrench || "",           // Crossed Trench
+    normalizedData.comments || "",                // Comments
+    normalizedData.rank || "",                    // Rank (1-3)
 
     // Calculated
-    data.estPoints || 0                 // Est Points
+    normalizedData.estPoints || 0                 // Est Points
   ];
 
   // Append the row
   sheet.appendRow(row);
 
-  Logger.log("✓ Match row appended: Match " + data.matchNumber + ", Team " + data.teamNumber);
+  Logger.log("✓ Match row appended: Match " + normalizedData.matchNumber + ", Team " + normalizedData.teamNumber);
 }
 
 /**
@@ -265,6 +360,7 @@ function writeToSheetMatch(data) {
 function writeToSheetPit(data) {
   Logger.log("Writing to pit sheet...");
 
+  const normalizedData = normalizePitData(data);
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(PIT_SHEET_NAME);
 
@@ -282,31 +378,31 @@ function writeToSheetPit(data) {
   }
 
   // Parse timestamp
-  const timestamp = data.timestampISO ? new Date(data.timestampISO) : new Date();
+  const timestamp = normalizedData.timestampISO ? new Date(normalizedData.timestampISO) : new Date();
 
   // Build row array (ordered to match pit scouting form flow)
   const row = [
     // System & General
     timestamp,                          // Timestamp
-    data.scoutName || "",               // Scout Name
-    data.eventCode || "",               // Event Code
-    data.teamNumber || 0,               // Team #
-    data.teamName || "",                // Team Name
+    normalizedData.scoutName || "",               // Scout Name
+    normalizedData.eventCode || "",               // Event Code
+    normalizedData.teamNumber || 0,               // Team #
+    normalizedData.teamName || "",                // Team Name
 
     // Robot Design
-    data.drivetrain || "",              // Drivetrain Type
-    data.motorType || "",               // Motor Type
-    data.width || "",                   // Width (inches)
-    data.length || "",                  // Length (inches)
-    data.height || "",                  // Height (inches)
-    data.programmingLang || "",         // Programming Language
-    data.canClimb || "No",              // Can Climb Tower
-    data.hopper || "No",                // Has Hopper
-    data.hopperLength || "",            // Hopper Length (inches)
-    data.hopperWidth || "",             // Hopper Width (inches)
-    data.hopperHeight || "",            // Hopper Height (inches)
-    data.ballCapacity || 0,             // Estimated Ball Capacity
-    data.specialFeatures || "",         // Special Features/Mechanisms
+    normalizedData.drivetrain || "",              // Drivetrain Type
+    normalizedData.motorType || "",               // Motor Type
+    normalizedData.width || "",                   // Width (inches)
+    normalizedData.length || "",                  // Length (inches)
+    normalizedData.height || "",                  // Height (inches)
+    normalizedData.programmingLang || "",         // Programming Language
+    normalizedData.canClimb || "No",              // Can Climb Tower
+    normalizedData.hopper || "No",                // Has Hopper
+    normalizedData.hopperLength || "",            // Hopper Length (inches)
+    normalizedData.hopperWidth || "",             // Hopper Width (inches)
+    normalizedData.hopperHeight || "",            // Hopper Height (inches)
+    normalizedData.ballCapacity || 0,             // Estimated Ball Capacity
+    normalizedData.specialFeatures || "",         // Special Features/Mechanisms
 
     // Robot Photo - placeholder for image
     ""                                  // Photo column (image will be inserted over this cell)
@@ -319,12 +415,12 @@ function writeToSheetPit(data) {
   const photoColumn = 19; // Column S (19th column) - the Photo column
 
   // Insert robot photo if provided
-  if (data.robotPhoto && data.robotPhoto.length > 0) {
+  if (normalizedData.robotPhoto && normalizedData.robotPhoto.length > 0) {
     try {
       Logger.log("Processing robot photo...");
 
       // Remove the data:image/jpeg;base64, prefix if present
-      let base64Data = data.robotPhoto;
+      let base64Data = normalizedData.robotPhoto;
       if (base64Data.indexOf('base64,') !== -1) {
         base64Data = base64Data.split('base64,')[1];
       }
@@ -333,7 +429,7 @@ function writeToSheetPit(data) {
       const imageBlob = Utilities.newBlob(
         Utilities.base64Decode(base64Data),
         'image/jpeg',
-        'robot_team_' + data.teamNumber + '_' + Date.now() + '.jpg'
+        'robot_team_' + normalizedData.teamNumber + '_' + Date.now() + '.jpg'
       );
 
       // Upload image to Google Drive and get shareable link
@@ -351,7 +447,7 @@ function writeToSheetPit(data) {
       const imageFormula = '=IMAGE("' + imageUrl + '", 1)';
       sheet.getRange(currentRow, photoColumn).setFormula(imageFormula);
 
-      Logger.log("✓ Robot photo inserted IN cell for Team " + data.teamNumber);
+      Logger.log("✓ Robot photo inserted IN cell for Team " + normalizedData.teamNumber);
 
     } catch (imageError) {
       Logger.log("⚠️ Failed to insert image: " + imageError.toString());
@@ -364,7 +460,7 @@ function writeToSheetPit(data) {
     sheet.getRange(currentRow, photoColumn).setValue("No photo");
   }
 
-  Logger.log("✓ Pit row appended: Team " + data.teamNumber + " (" + data.teamName + ")");
+  Logger.log("✓ Pit row appended: Team " + normalizedData.teamNumber + " (" + normalizedData.teamName + ")");
 }
 
 /**

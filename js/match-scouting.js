@@ -619,25 +619,40 @@
         const sessionData = JSON.parse(sessionStorage.getItem("scoutSession") || "{}");
 
         return {
+            scoutingType: "MATCH",
             timestampISO: new Date().toISOString(),
             studentName: getVal("studentName").trim(),
             scoutTeam: getVal("scoutTeam"),
             eventCode: CONFIG.EVENT_KEY,
             matchNumber: Number(getVal("matchNumber", "0")),
             teamNumber: Number(state.selectedTeam || 0),
+            teamName: (state.loadedTeams.find(team => team.number === Number(state.selectedTeam || 0)) || {}).name || "",
             alliance: getVal("alliance"),
 
             startPos: state.startPos || "",
             autoFuel: state.autoFuel,
+            autoFuelRange: state.autoFuel || "",
+            fuelNeutralZone: false,
+            fuelOutpost: false,
+            fuelDepot: state.autoFuel === "Yes",
+            fuelFloor: false,
+            autoBumpOver: false,
+            autoTrenchUnder: false,
+            autoBumpTrenchNone: false,
             autoTower: state.autoTower || "NONE",
             autoTowerPoints: towerPointsAuto(state.autoTower),
-
-            passingShoot: state.passingShoot,
-            passIntake: state.passIntake,
-            shotOnMove: state.shotOnMove,
-            shotStill: state.shotStill,
-            shotStillPositions: state.shotStillPositions.join(", "),
             autoShuttling: state.autoShuttling || "",
+
+            teleopFuelActiveRange: String(state.passingShoot ?? 0),
+            teleopFuelNeutralZone: false,
+            teleopFuelOutpost: false,
+            teleopFuelDepot: false,
+            teleopFuelFloor: false,
+            inactivePlayedDefense: false,
+            inactiveShuttledFuel: false,
+            inactiveBlockedBumpTrench: false,
+            inactiveCollectingFuel: false,
+            shuttling: state.autoShuttling || "",
 
             teleopTower: state.teleopTower || "NONE",
             teleopTowerPoints: towerPointsTeleop(state.teleopTower),
@@ -650,8 +665,11 @@
             endgameEffectiveness: getVal("endgameEffectiveness"),
             robotStatus: getVal("robotStatus"),
             defenseRating: getVal("defenseRating"),
+            crossedBump: "",
+            crossedTrench: "",
             rank: state.rank || "",
             comments: getVal("comments"),
+            estPoints: 0,
 
             submitCode: getVal("submitCode")
         };
